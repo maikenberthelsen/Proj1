@@ -41,7 +41,34 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
-    return
+
+	"""Stochastic gradient descent algorithm."""
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    
+    #iterate max_iters times, where a small batch is picked on each iteration. 
+    #Don't understant whyyy we do this?
+    for n_iter in range(max_iters):
+        for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size, num_batches=1):
+            grad, loss = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
+            w = w - gamma*grad
+        
+            # store w and loss
+            ws.append(w)
+            losses.append(loss)
+            
+    
+    #finds best parameters
+    min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
+	loss = losses[min_row, min_col]
+	w = [w0[min_row], w1[min_col]]
+
+
+    return w, loss
+
+
+
 
 def least_squares(y, tx):
     return
