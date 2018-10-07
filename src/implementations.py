@@ -92,12 +92,61 @@ def ridge_regression(y, tx, lambda_):
 
 	return w, loss
 
+def sigmoid(t):
+	"""apply sigmoid function on t."""
+	return np.exp(t)/(1+ np.exp(t))
 
+# tentative suggestions for logistic regression
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
-    return
+
+	ws = [initial_w]
+	losses = []
+	w = initial_w
+
+	for n_iter in range(max_iters):
+		# compute prediction, loss, gradient
+		#tx should maybe not be transposed
+		# not transposed when using large X
+		prediction = sigmoid(tx.dot(w))
+		loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction))) + ((lambda_/2)*(np.linalg.norm(w)**2))
+		gradient = tx.T.dot(prediction - y)
+
+		# gradient w by descent update
+		w = w - gamma * grad
+		# store w and loss
+		ws.append(w)
+		losses.append(loss)
+
+	#finds best parameters
+	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
+	loss = losses[min_row, min_col]
+	w = [w0[min_row], w1[min_col]]
+    return w, loss
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
-    return
+	ws = [initial_w]
+	losses = []
+	w = initial_w
+
+	for n_iter in range(max_iters):
+		# compute prediction, loss, gradient
+		#tx should maybe not be transposed
+		# not transposed when using large X
+		prediction = sigmoid(tx.dot(w))
+		loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction))) + lambda_
+		gradient = tx.T.dot(prediction - y) + (lambda_*np.linalg.norm(w))
+
+		# gradient w by descent update
+		w = w - gamma * grad
+		# store w and loss
+		ws.append(w)
+		losses.append(loss)
+
+	#finds best parameters
+	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
+	loss = losses[min_row, min_col]
+	w = [w0[min_row], w1[min_col]]
+    return w, loss
 
 
 def main():
