@@ -85,7 +85,7 @@ def ridge_regression(y, tx, lambda_):
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     return
 
-def reg_logistic_regression(y, tx, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     return
 
 
