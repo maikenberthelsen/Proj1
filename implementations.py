@@ -36,7 +36,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 	loss = losses[min_row, min_col]
 	w = [w0[min_row], w1[min_col]]
 
-    return loss, w
+    return w, loss
 
 
 
