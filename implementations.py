@@ -66,9 +66,19 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 
-
-
 def least_squares(y, tx):
+    """calculate the least squares solution."""
+    
+    a = tx.T.dot(tx)
+    b = tx.T.dot(y)
+    w = np.linalg.solve(a, b)
+
+    e = y - tx.dot(w)
+    loss = e.dot(e) / (2 * len(e))
+
+    return w, loss
+
+
     return
 
 def ridge_regression(y, tx, initial_w, max_iters, gamma):
