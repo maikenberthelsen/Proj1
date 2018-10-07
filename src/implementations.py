@@ -22,7 +22,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 	for n_iter in range(max_iters):
 		# compute loss, gradient
 		grad, err = compute_gradient(y, tx, w)
-		1/2*np.mean(err**2)
+		loss = 1/2*np.mean(err**2)
 
 		# gradient w by descent update
 		w = w - gamma * grad
@@ -31,9 +31,9 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 		losses.append(loss)
 
 	#finds best parameters
-	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
-	loss = losses[min_row, min_col]
-	w = [w0[min_row], w1[min_col]]
+	min_ind = np.argmin(losses)
+	loss = losses[min_ind]
+	w = ws[min_ind][:]
 
 	return w, loss
 
@@ -43,7 +43,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 
 	"""Stochastic gradient descent algorithm."""
 	ws = [initial_w]
-	losses = []
+	losses = np.array([])
 	w = initial_w
 
 	#iterate max_iters times, where a small batch is picked on each iteration.
@@ -59,10 +59,10 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 
 
 	#finds best parameters
-	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
-	loss = losses[min_row, min_col]
-	w = [w0[min_row], w1[min_col]]
-
+	#finds best parameters
+	min_ind = np.argmin(losses)
+	loss = losses[min_ind]
+	w = ws[min_ind][:]
 
 	return w, loss
 
@@ -101,14 +101,31 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 
 
 def main():
-	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
+	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
 	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
-    #yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
+	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
 
-	print(yb)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
+
+	
+	x = standardize(input_data)
+	y, tx = build_model_data(x,yb)
+
+	###### Gradient descent ########
+	max_iters = 150
+	gamma = 0.15
+	initial_w = np.zeros(tx.shape[1])
+
+	w, loss = least_squares_GD(y, tx, initial_w, max_iters, gamma)
+	print('w = ', w)
+	print('MSE = ', loss)
+
+
+	##### Stochastic gradient descent ########
 
 
 	return 0;
 
 
+#Run main function
 main()
