@@ -77,9 +77,7 @@ def least_squares(y, tx):
     loss = e.dot(e) / (2 * len(e))
 
     return w, loss
-
-
-    return
+    
 
 def ridge_regression(y, tx, initial_w, max_iters, gamma):
     return
