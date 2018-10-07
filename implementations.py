@@ -11,7 +11,6 @@ def compute_gradient(y, tx, w):
 
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
-	#dette er en test
 
     """Gradient descent algorithm."""
     # Define parameters to store w and loss
@@ -35,8 +34,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     #finds best parameters
     min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
-	w[0] = w0[min_row]
-	w[1] = w1[min_col]
+	w = [w0[min_row], w1[min_col]]
 
     return loss, w
 
