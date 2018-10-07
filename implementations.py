@@ -3,6 +3,7 @@
 import numpy as np
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
+	#dette er en test
     return
 
 
