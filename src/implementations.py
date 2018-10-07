@@ -1,7 +1,7 @@
 #all implementation goes here
 
 import numpy as np
-import proj1_helpers
+from proj1_helpers import *
 
 
 def compute_gradient(y, tx, w):
@@ -91,7 +91,10 @@ def reg_logistic_regression(y, tx, initial_w, max_iters, gamma):
 
 
 def main():
-	print("hello world")
+	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
+
+	print(yb)
+
 
 	return 0;
 
