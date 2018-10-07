@@ -29,7 +29,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 		# store w and loss
 		ws.append(w)
 		losses.append(loss)
-        
+
 	#finds best parameters
 	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
@@ -45,8 +45,8 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
 	w = initial_w
-    
-	#iterate max_iters times, where a small batch is picked on each iteration. 
+
+	#iterate max_iters times, where a small batch is picked on each iteration.
 	#Don't understant whyyy we do this?
 	for n_iter in range(max_iters):
 		for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size, num_batches=1):
@@ -56,8 +56,8 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 			# store w and loss
 			ws.append(w)
 			losses.append(loss)
-            
-    
+
+
 	#finds best parameters
 	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
@@ -80,13 +80,12 @@ def least_squares(y, tx):
 	return w, loss
 
 
-def ridge_regression(y, tx, initial_w, max_iters, gamma):
+def ridge_regression(y, tx, lambda_):
     return
-
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
     return
 
-def reg_logistic_regression(y, tx, initial_w, max_iters, gamma):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     return
 
 
@@ -100,11 +99,3 @@ def main():
 
 
 main()
-
-
-
-
-
-
-
-
