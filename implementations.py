@@ -29,8 +29,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         ws.append(w)
         losses.append(loss)
         
-    
-
     #finds best parameters
     min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
