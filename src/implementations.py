@@ -1,6 +1,7 @@
 #all implementation goes here
 
 import numpy as np
+import datetime
 from proj1_helpers import *
 
 
@@ -45,14 +46,15 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 
 	"""Stochastic gradient descent algorithm."""
 	ws = [initial_w]
-	losses = np.array([])
+	losses = []
 	w = initial_w
+	batch_size = 1
 
 	#iterate max_iters times, where a small batch is picked on each iteration.
 	#Don't understant whyyy we do this?
 	for n_iter in range(max_iters):
 		for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size, num_batches=1):
-			grad, loss = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
+			grad, loss = compute_gradient(minibatch_y, minibatch_tx, w)
 			w = w - gamma*grad
 
 			# store w and loss
@@ -160,8 +162,9 @@ def main():
 	x = standardize(input_data)
 	y, tx = build_model_data(x,yb)
 
-	###### Gradient descent ########
-	max_iters = 500
+
+	"""###### Gradient descent ########
+	max_iters = 150
 	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
 	#initial_w = np.zeros(tx.shape[1])
 	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
@@ -170,14 +173,36 @@ def main():
   		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
   		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
-	w, loss = least_squares_GD(y, tx, initial_w, max_iters, gamma)
-	print('w = ', w)
-	print('MSE = ', loss)
+	start_time = datetime.datetime.now()
+	gd_w, gd_loss = least_squares_GD(y, tx, initial_w, max_iters, gamma)
+	end_time = datetime.datetime.now()
+	exection_time = (end_time - start_time).total_seconds()
 
+	print('GD ', exection_time)
+	print('w = ', gd_w)
+	print('MSE = ', gd_loss)
+"""
 
 	##### Stochastic gradient descent ########
 
+	max_iters = 50
+	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
+	batch_size = 1
 
+	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
+		0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
+  		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
+  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
+  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
+
+	start_time = datetime.datetime.now()
+	sgd_w, sgd_loss = least_squares_SGD(y, tx, initial_w, max_iters, gamma)
+	end_time = datetime.datetime.now()
+	exection_time = (end_time - start_time).total_seconds()
+
+	print('SGD ', exection_time)
+	print('w = ', sgd_w)
+	print('MSE = ', sgd_loss)
 
 
 	return 0;
