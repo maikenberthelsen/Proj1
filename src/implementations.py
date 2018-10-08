@@ -30,7 +30,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 		# store w and loss
 		ws.append(w)
 		losses.append(loss)
-		print(loss)
 
 	#finds best parameters
 	min_ind = np.argmin(losses)
@@ -56,12 +55,13 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 		for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size, num_batches=1):
 			grad, err = compute_gradient(minibatch_y, minibatch_tx, w)
 			loss = 1/2*np.mean(err**2)
-			
+
 			w = w - gamma*grad
 
 			# store w and loss
 			ws.append(w)
 			losses.append(loss)
+			print(loss)
 
 	#finds best parameters
 	min_ind = np.argmin(losses)
@@ -122,9 +122,9 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 		losses.append(loss)
 
 	#finds best parameters
-	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
-	loss = losses[min_row, min_col]
-	w = [w0[min_row], w1[min_col]]
+	min_ind = np.argmin(losses)
+	loss = losses[min_ind]
+	w = ws[min_ind][:]
 	return w, loss
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
@@ -147,9 +147,9 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 		losses.append(loss)
 
 	#finds best parameters
-	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
-	loss = losses[min_row, min_col]
-	w = [w0[min_row], w1[min_col]]
+	min_ind = np.argmin(losses)
+	loss = losses[min_ind]
+	w = ws[min_ind][:]
 	return w, loss
 
 
@@ -164,8 +164,8 @@ def main():
 	x = standardize(input_data)
 	y, tx = build_model_data(x,yb)
 
-
-	"""###### Gradient descent ########
+	"""
+	###### Gradient descent ########
 	max_iters = 150
 	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
 	#initial_w = np.zeros(tx.shape[1])
@@ -180,14 +180,14 @@ def main():
 	end_time = datetime.datetime.now()
 	exection_time = (end_time - start_time).total_seconds()
 
-	print('GD ', exection_time)
+	print('GD\n time = ', exection_time)
 	print('w = ', gd_w)
 	print('MSE = ', gd_loss)
-"""
+	"""
 
 	##### Stochastic gradient descent ########
 
-	max_iters = 50
+	max_iters = 100
 	gamma = 0.01 #Ikke høyere enn 0.15, da konvergerer det ikke
 	batch_size = 1
 
@@ -202,7 +202,7 @@ def main():
 	end_time = datetime.datetime.now()
 	exection_time = (end_time - start_time).total_seconds()
 
-	print('SGD ', exection_time)
+	print('SGD\n time = ', exection_time)
 	print('w = ', sgd_w)
 	print('MSE = ', sgd_loss)
 
