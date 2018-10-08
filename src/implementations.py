@@ -54,7 +54,9 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 	#Don't understant whyyy we do this?
 	for n_iter in range(max_iters):
 		for minibatch_y, minibatch_tx in batch_iter(y, tx, batch_size, num_batches=1):
-			grad, loss = compute_gradient(minibatch_y, minibatch_tx, w)
+			grad, err = compute_gradient(minibatch_y, minibatch_tx, w)
+			loss = 1/2*np.mean(err**2)
+			
 			w = w - gamma*grad
 
 			# store w and loss
@@ -152,7 +154,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 
 
 def main():
-	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
+	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
 	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
 	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
 
@@ -186,7 +188,7 @@ def main():
 	##### Stochastic gradient descent ########
 
 	max_iters = 50
-	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
+	gamma = 0.01 #Ikke høyere enn 0.15, da konvergerer det ikke
 	batch_size = 1
 
 	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
@@ -208,5 +210,5 @@ def main():
 	return 0;
 
 
-#Run main function
+### Run main function
 main()
