@@ -29,11 +29,13 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 		# store w and loss
 		ws.append(w)
 		losses.append(loss)
+		print(loss)
 
 	#finds best parameters
 	min_ind = np.argmin(losses)
 	loss = losses[min_ind]
 	w = ws[min_ind][:]
+
 
 	return w, loss
 
@@ -57,8 +59,6 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 			ws.append(w)
 			losses.append(loss)
 
-
-	#finds best parameters
 	#finds best parameters
 	min_ind = np.argmin(losses)
 	loss = losses[min_ind]
@@ -121,7 +121,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
 	w = [w0[min_row], w1[min_col]]
-    return w, loss
+	return w, loss
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	ws = [initial_w]
@@ -146,7 +146,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	min_row, min_col = np.unravel_index(np.argmin(losses), losses.shape)
 	loss = losses[min_row, min_col]
 	w = [w0[min_row], w1[min_col]]
-    return w, loss
+	return w, loss
 
 
 def main():
@@ -161,9 +161,14 @@ def main():
 	y, tx = build_model_data(x,yb)
 
 	###### Gradient descent ########
-	max_iters = 150
-	gamma = 0.15
-	initial_w = np.zeros(tx.shape[1])
+	max_iters = 500
+	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
+	#initial_w = np.zeros(tx.shape[1])
+	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
+		0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
+  		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
+  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
+  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
 	w, loss = least_squares_GD(y, tx, initial_w, max_iters, gamma)
 	print('w = ', w)
@@ -171,6 +176,8 @@ def main():
 
 
 	##### Stochastic gradient descent ########
+
+
 
 
 	return 0;
