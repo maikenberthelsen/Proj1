@@ -158,11 +158,15 @@ def main():
 	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
 	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
 
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
 
 	
 	x = standardize(input_data)
 	y, tx = build_model_data(x,yb)
+
+	x_test = standardize(input_data_test)
+	y_test, tx_test = build_model_data(x_test,yb_test)
+
 
 	"""
 	###### Gradient descent ########
@@ -206,6 +210,11 @@ def main():
 	print('w = ', sgd_w)
 	print('MSE = ', sgd_loss)
 
+	#Make predictions
+
+	y_pred = predict_labels(sgd_w, tx_test)
+
+	create_csv_submission(ids_test, y_pred, 'test1') #lager prediction-fila i Rolex-mappa med det navnet
 
 	return 0;
 
