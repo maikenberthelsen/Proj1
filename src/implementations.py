@@ -153,23 +153,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	return w, loss
 
 
-def main():
-	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
-	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
-	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
-
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
-
-	
-	x = standardize(input_data)
-	y, tx = build_model_data(x,yb)
-
-	x_test = standardize(input_data_test)
-	y_test, tx_test = build_model_data(x_test,yb_test)
-
-
-	"""
-	###### Gradient descent ########
+def run_gradient_descent(y, tx):
 	max_iters = 150
 	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
 	#initial_w = np.zeros(tx.shape[1])
@@ -187,10 +171,10 @@ def main():
 	print('GD\n time = ', exection_time)
 	print('w = ', gd_w)
 	print('MSE = ', gd_loss)
-	"""
 
-	##### Stochastic gradient descent ########
+	return gd_w, gd_loss
 
+def run_stochastic_gradient_descent(y,tx):
 	max_iters = 100
 	gamma = 0.01 #Ikke høyere enn 0.15, da konvergerer det ikke
 	batch_size = 1
@@ -210,11 +194,31 @@ def main():
 	print('w = ', sgd_w)
 	print('MSE = ', sgd_loss)
 
+	return sgd_w, sgd_loss
+
+
+
+def main():
+	yb, input_data, ids = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
+	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
+	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
+
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
+
+	x = standardize(input_data)
+	y, tx = build_model_data(x,yb)
+
+	x_test = standardize(input_data_test)
+	y_test, tx_test = build_model_data(x_test,yb_test)
+
+	gd_w, gd_loss = run_gradient_descent(y, tx)
+
+	#sgd_w, sgd_loss = run_stochastic_gradient_descent(y,tx)
+
 	#Make predictions
+	y_pred = predict_labels(gd_w, tx_test)
 
-	y_pred = predict_labels(sgd_w, tx_test)
-
-	create_csv_submission(ids_test, y_pred, 'test1') #lager prediction-fila i Rolex-mappa med det navnet
+	create_csv_submission(ids_test, y_pred, 'test2_gd') #lager prediction-fila i Rolex-mappa med det navnet
 
 	return 0;
 
