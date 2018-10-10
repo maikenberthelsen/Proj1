@@ -92,4 +92,13 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 
 
 
+def build_poly(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
 
+    ret = np.ones([len(x),1])
+    for d in range (1,degree+1):
+        # for hver dimensjon må det legges til en kolonne (som er x elementvist opphøyd i d)
+        # dette kan gjøres med np.c_
+        
+        ret = np.c_[ret,np.power(x,d)] 
+    return ret
