@@ -160,7 +160,7 @@ def run_gradient_descent(y, x):
 	max_iters = 150
 	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
 	#initial_w = np.zeros(tx.shape[1])
-	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
+	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791,
 		0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
   		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
   		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
@@ -185,7 +185,7 @@ def run_stochastic_gradient_descent(y,x):
 	gamma = 0.01 #Ikke høyere enn 0.15, da konvergerer det ikke
 	batch_size = 1
 
-	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791, 
+	initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791,
 		0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
   		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
   		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
@@ -215,17 +215,19 @@ def run_ridge_regression(y,x):
 
 def main():
 	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
-	#yb, input_data, ids = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
-	#yb, input_data, ids = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
+    yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
+    #yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
+    #yb_test, input_data_test, ids_test = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/test.csv', sub_sample=False)
 
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
 
 	x_train = standardize(input_data_train)
-	
+
 	x_test = standardize(input_data_test)
 	y_test, tx_test = build_model_data(x_test,yb_test)
 
-	
+
 	#gd_w, gd_loss = run_gradient_descent(yb_train, x_train)
 
 	#sgd_w, sgd_loss = run_stochastic_gradient_descent(yb_train, x_train)
