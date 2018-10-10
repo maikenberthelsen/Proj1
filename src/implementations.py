@@ -153,7 +153,10 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	return w, loss
 
 
-def run_gradient_descent(y, tx):
+def run_gradient_descent(y, x):
+
+	y, tx = build_model_data(y,x)
+
 	max_iters = 150
 	gamma = 0.1 #Ikke høyere enn 0.15, da konvergerer det ikke
 	#initial_w = np.zeros(tx.shape[1])
@@ -174,7 +177,10 @@ def run_gradient_descent(y, tx):
 
 	return gd_w, gd_loss
 
-def run_stochastic_gradient_descent(y,tx):
+def run_stochastic_gradient_descent(y,x):
+
+	y, tx = build_model_data(y,x)
+
 	max_iters = 100
 	gamma = 0.01 #Ikke høyere enn 0.15, da konvergerer det ikke
 	batch_size = 1
@@ -204,7 +210,7 @@ def run_ridge_regression(y,x):
 
 	rr_w, rr_loss = ridge_regression(y, tx, lambda_)
 
-	return rr_w, rr_loss
+	return rr_w, rr_loss, degree
 
 
 def main():
@@ -215,18 +221,18 @@ def main():
 	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
 
 	x_train = standardize(input_data_train)
-	y_train, tx_train = build_model_data(x_train,yb_train)
-
+	
 	x_test = standardize(input_data_test)
 	y_test, tx_test = build_model_data(x_test,yb_test)
 
-	tx_test = build_poly(x_test,5)
+	
+	#gd_w, gd_loss = run_gradient_descent(yb_train, x_train)
 
-	#gd_w, gd_loss = run_gradient_descent(y, tx)
+	#sgd_w, sgd_loss = run_stochastic_gradient_descent(yb_train, x_train)
 
-	#sgd_w, sgd_loss = run_stochastic_gradient_descent(y,tx)
+	rr_w, rr_loss, degree = run_ridge_regression(yb_train,x_train)
+	tx_test = build_poly(x_test,degree)
 
-	rr_w, rr_loss = run_ridge_regression(y_train,x_train)
 
 	#Make predictions
 	y_pred = predict_labels(rr_w, tx_test)
