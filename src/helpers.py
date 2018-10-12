@@ -47,7 +47,6 @@ def create_csv_submission(ids, y_pred, name):
 
 def standardize(x):
     """Standardize the original data set."""
-
     x -= np.mean(x, axis=0)
     #print(x)
     x /= np.std(x, axis=0)
@@ -56,14 +55,14 @@ def standardize(x):
 
 def build_model_data(x, y):
     """Form (y,tX) to get regression data in matrix form."""
-    num_samples = len(y)
-    tx = np.c_[np.ones(num_samples), x]
+    N = len(y)
+    tx = np.c_[np.ones(N), x]
     return y, tx
 
 def compute_mse(y, tx, w):
     """compute the loss by mse."""
     e = y - tx.dot(w)
-    mse = e.dot(e) / (2 * len(e))
+    mse =  1/(2 * len(e)) * e.dot(e)
     return mse
 
 def compute_gradient(y, tx, w):
@@ -114,18 +113,16 @@ def build_poly(x, degree):
     return ret
 
 def split_data(y, x, ratio, seed=10):
-    """split the dataset based on the split ratio."""
-    # set seed
     np.random.seed(seed)
-    # generate random indices
-    num_row = len(y)
-    indices = np.random.permutation(num_row)
-    index_split = int(np.floor(ratio * num_row))
-    index_tr = indices[: index_split]
-    index_te = indices[index_split:]
-    # create split
+    N = len(y)
+    
+    index = np.random.permutation(N)
+    index_tr = index[: int(np.floor(N*ratio))]
+    index_te = index[int(np.floor(N*ratio)) :]
+    
     x_tr = x[index_tr]
     x_te = x[index_te]
     y_tr = y[index_tr]
     y_te = y[index_te]
+    
     return x_tr, x_te, y_tr, y_te

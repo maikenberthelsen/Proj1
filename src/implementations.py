@@ -29,7 +29,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 	loss = losses[min_ind]
 	w = ws[min_ind][:]
 
-
 	return w, loss
 
 
