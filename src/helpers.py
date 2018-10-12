@@ -23,7 +23,6 @@ def load_csv_data(data_path, sub_sample=False):
 
     return yb, input_data, ids
 
-
 def predict_labels(weights, data):
     """Generates class predictions given weights, and a test data matrix"""
     y_pred = np.dot(data, weights)
@@ -31,7 +30,6 @@ def predict_labels(weights, data):
     y_pred[np.where(y_pred > 0)] = 1
 
     return y_pred
-
 
 def create_csv_submission(ids, y_pred, name):
     """
@@ -47,7 +45,6 @@ def create_csv_submission(ids, y_pred, name):
         for r1, r2 in zip(ids, y_pred):
             writer.writerow({'Id':int(r1),'Prediction':int(r2)})
 
-
 def standardize(x):
     """Standardize the original data set."""
 
@@ -57,13 +54,27 @@ def standardize(x):
 
     return x 
 
-
 def build_model_data(x, y):
     """Form (y,tX) to get regression data in matrix form."""
     num_samples = len(y)
     tx = np.c_[np.ones(num_samples), x]
     return y, tx
 
+def compute_mse(y, tx, w):
+    """compute the loss by mse."""
+    e = y - tx.dot(w)
+    mse = e.dot(e) / (2 * len(e))
+    return mse
+
+def compute_gradient(y, tx, w):
+    """Compute the gradient."""
+    err = y - tx.dot(w)
+    grad = -tx.T.dot(err) / len(err)
+    return grad, err
+
+def sigmoid(t):
+    """apply sigmoid function on t."""
+    return np.exp(t)/(1+ np.exp(t))
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -91,7 +102,6 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
             yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
 
 
-
 def build_poly(x, degree):
     """polynomial basis functions for input data x, for j=0 up to j=degree."""
 
@@ -102,7 +112,6 @@ def build_poly(x, degree):
         
         ret = np.c_[ret,np.power(x,d)] 
     return ret
-
 
 def split_data(y, x, ratio, seed=10):
     """split the dataset based on the split ratio."""
@@ -120,9 +129,3 @@ def split_data(y, x, ratio, seed=10):
     y_tr = y[index_tr]
     y_te = y[index_te]
     return x_tr, x_te, y_tr, y_te
-
-def compute_mse(y, tx, w):
-    """compute the loss by mse."""
-    e = y - tx.dot(w)
-    mse = e.dot(e) / (2 * len(e))
-    return mse

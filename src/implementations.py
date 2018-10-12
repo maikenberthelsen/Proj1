@@ -3,14 +3,6 @@
 import numpy as np
 import datetime
 from helpers import *
-import matplotlib.pyplot as plt
-
-
-def compute_gradient(y, tx, w):
-    """Compute the gradient."""
-    err = y - tx.dot(w)
-    grad = -tx.T.dot(err) / len(err)
-    return grad, err
 
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
@@ -39,7 +31,6 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 
 	return w, loss
-
 
 
 def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
@@ -97,9 +88,6 @@ def ridge_regression(y, tx, lambda_):
 
 	return w, loss
 
-def sigmoid(t):
-	"""apply sigmoid function on t."""
-	return np.exp(t)/(1+ np.exp(t))
 
 # tentative suggestions for logistic regression
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
@@ -128,6 +116,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 	w = ws[min_ind][:]
 	return w, loss
 
+
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
@@ -152,9 +141,5 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	loss = losses[min_ind]
 	w = ws[min_ind][:]
 	return w, loss
-
-
-
-
 
 
