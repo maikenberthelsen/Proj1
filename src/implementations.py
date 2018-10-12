@@ -3,6 +3,7 @@
 import numpy as np
 import datetime
 from proj1_helpers import *
+import matplotlib.pyplot as plt
 
 
 def compute_gradient(y, tx, w):
@@ -213,14 +214,54 @@ def run_least_square(y,x):
 
 
 def run_ridge_regression(y,x):
-	lambda_ = 0.03
-	degree = 5
+	lambda_ = 0.003
+	degree = 4
 
 	tx = build_poly(x,degree)
 
 	rr_w, rr_loss = ridge_regression(y, tx, lambda_)
 
 	return rr_w, rr_loss, degree
+
+def tune_ridge_regression(y,x):
+	
+	lambdas = np.logspace(-5,0,20)
+	degree = 4
+	ratio = 0.8
+
+	x_tr, x_te, y_tr, y_te = split_data(y, x, ratio)
+
+	tx_tr = build_poly(x_tr,degree)
+	tx_te = build_poly(x_te,degree)
+
+	rmse_tr = []
+	rmse_te = []
+
+	for ind, lambda_ in enumerate(lambdas):
+		# ridge regression
+		w_x, loss_tr = ridge_regression(y_tr, tx_tr, lambda_)
+		rmse_tr.append(np.sqrt(2 * compute_mse(y_tr, tx_tr, w_x)))
+		rmse_te.append(np.sqrt(2 * compute_mse(y_te, tx_te, w_x)))
+
+		#print("proportion={p}, degree={d}, lambda={l:.15f}, Training RMSE={tr:.10f}, Testing RMSE={te:.10f}".format(
+		#       p=ratio, d=degree, l=lambda_*10**15, tr=rmse_tr[ind], te=rmse_te[ind]))
+	
+	plt.semilogx(lambdas, rmse_tr, color='b', marker='*', label="Train error")
+	plt.semilogx(lambdas, rmse_te, color='r', marker='*', label="Test error")
+	plt.xlabel("lambda")
+	plt.ylabel("RMSE")
+	plt.title("Ridge regression for polynomial degree " + str(degree))
+	leg = plt.legend(loc=1, shadow=True)
+	leg.draw_frame(False)
+	plt.show()
+
+
+
+	#plot_train_test(rmse_tr, rmse_te, lambdas, degree)
+
+	#rr_w, rr_loss = ridge_regression(y, tx, lambda_)
+
+	#return rr_w, rr_loss, degree
 
 
 def run_logistic_regression(y, x):
@@ -238,8 +279,8 @@ def run_logistic_regression(y, x):
 
 
 def main():
-	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
+	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
 	#yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=False)
@@ -256,19 +297,21 @@ def main():
 
 	#sgd_w, sgd_loss = run_stochastic_gradient_descent(yb_train, x_train)
 
-	#rr_w, rr_loss, degree = run_ridge_regression(yb_train,x_train)
-	#tx_test = build_poly(x_test,degree)
+	rr_w, rr_loss, degree = run_ridge_regression(yb_train,x_train)
+	tx_test = build_poly(x_test,degree)
 
 	#ls_w, ls_loss, degree = run_least_square(yb_train,x_train)
 	#tx_test = build_poly(x_test,degree)
 
-	lr_w, lr_loss = run_logistic_regression(yb_train, x_train)
+	#lr_w, lr_loss = run_logistic_regression(yb_train, x_train)
+
+	#tune_ridge_regression(yb_train,x_train)
 
 
 	#Make predictions
-	y_pred = predict_labels(lr_w, tx_test)
+	y_pred = predict_labels(rr_w, tx_test)
 
-	create_csv_submission(ids_test, y_pred, 'test5_lr') #lager prediction-fila i Rolex-mappa med det navnet
+	create_csv_submission(ids_test, y_pred, 'test7_rr') #lager prediction-fila i Rolex-mappa med det navnet
 
 	return 0;
 
