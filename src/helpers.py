@@ -56,7 +56,8 @@ def standardize(x):
 def build_model_data(x, y):
     """Form (y,tX) to get regression data in matrix form."""
     N = len(y)
-    tx = np.c_[np.ones(N), x]
+    #tx = np.c_[np.ones(N), x]
+    tx = np.c_[np.ones((y.shape[0], 1)), x]
     return y, tx
 
 def compute_mse(y, tx, w):
@@ -73,7 +74,8 @@ def compute_gradient(y, tx, w):
 
 def sigmoid(t):
     """apply sigmoid function on t."""
-    return np.exp(t)/(1+ np.exp(t))
+    return 1.0/(1 + np.exp(-t))
+    #return np.exp(t)/(1 + np.exp(t))
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
