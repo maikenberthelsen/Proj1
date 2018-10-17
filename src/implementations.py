@@ -94,7 +94,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
 	w = initial_w
-	threshold = 1e-8
+	#threshold = 1e-8
 
 	for n_iter in range(max_iters):
 		# compute prediction, loss, gradient
@@ -104,11 +104,8 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 		print(n_iter)
 		
 		prediction = sigmoid(tx.dot(w))
-		print(prediction)
 		
 		loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction)))# + ((lambda_/2)*(np.linalg.norm(w)**2))
-
-		print(loss)
 		gradient = tx.T.dot(prediction - y)
 
 		# gradient w by descent update
@@ -118,8 +115,8 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 		ws.append(w)
 		losses.append(loss)
 
-		if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
-			break
+		#if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
+		#	break
 
 	#finds best parameters
 	min_ind = np.argmin(losses)
@@ -127,6 +124,9 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
 	w = ws[min_ind][:]
 	
 	return w, loss
+
+
+
 
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
@@ -153,5 +153,74 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	loss = losses[min_ind]
 	w = ws[min_ind][:]
 	return w, loss
+
+
+################################################
+
+def sigmoid2(t):
+    """apply sigmoid function on t."""
+    return 1.0 / (1 + np.exp(-t))
+
+def calculate_loss_lr(y, tx, w):
+    """compute the cost by negative log likelihood."""
+    pred = sigmoid2(tx.dot(w))
+    print(pred)
+    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    return np.squeeze(- loss)
+
+def calculate_gradient(y, tx, w):
+    """compute the gradient of loss."""
+    pred = sigmoid2(tx.dot(w))
+    #print(pred.shape)
+    grad = tx.T.dot(pred - y)
+    return grad
+
+
+def learning_by_gradient_descent(y, tx, w, gamma):
+    """
+    Do one step of gradient descen using logistic regression.
+    Return the loss and the updated w.
+    """
+
+    # print(y.shape)
+    # print(tx.shape)
+    # print(w.shape)
+    
+
+    loss = calculate_loss_lr(y, tx, w)
+    grad = calculate_gradient(y, tx, w)
+    #print(grad.shape)
+    #print(w.shape)
+
+    w -= gamma * grad
+    return loss, w
+
+
+def logistic_regression2(y, tx, initial_w, max_iters, gamma):
+    # init parameters
+
+    threshold = 1e-8
+    losses = []
+    w = initial_w
+
+    # start the logistic regression
+    for iter in range(max_iters):
+        print(iter)
+        
+        # get loss and update w.
+        loss, w = learning_by_gradient_descent(y, tx, w, gamma)
+        
+        # log info
+        if iter % 100 == 0:
+            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
+        
+        # converge criterion
+        losses.append(loss)
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
+    # visualization
+    #print("loss={l}".format(l=calculate_loss_lr(y, tx, w)))
+
+    return w, loss
 
 
