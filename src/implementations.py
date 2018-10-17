@@ -155,6 +155,8 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	return w, loss
 
 
+
+
 ################################################
 
 def sigmoid2(t):
@@ -222,5 +224,76 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
     #print("loss={l}".format(l=calculate_loss_lr(y, tx, w)))
 
     return w, loss
+
+
+
+########################
+
+def build_k_indices(y, k_fold, seed):
+    """build k indices for k-fold."""
+    num_row = y.shape[0]
+    interval = int(num_row / k_fold)
+    np.random.seed(seed)
+    indices = np.random.permutation(num_row)
+    k_indices = [indices[k * interval: (k + 1) * interval]
+                 for k in range(k_fold)]
+    return np.array(k_indices)
+
+
+def cross_validation(y, x, k_indices, k, lambda_, degree):
+    """return the loss of ridge regression."""
+    y_te=y[k_indices[k,:]]
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+    
+    y_tr=y[tr_indices].flatten()
+    x_tr=x[tr_indices].flatten()
+
+    tx_tr = build_poly(x_tr, degree)
+    tx_te = build_poly(x_te, degree)
+
+    w, loss = ridge_regression(y_tr, tx_tr, lambda_)
+
+    loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
+    loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
+
+    return loss_tr, loss_te
+
+def cross_validation_demo(y, x):
+    seed = 1
+    degree = 7
+    k_fold = 10
+    lambdas = np.logspace(-4, 0, 30)
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    rmse_tr = []
+    rmse_te = []
+
+    for lambda_ in lambdas:
+        rmse_tr_temp= []
+        rmse_te_temp= []
+        for k in range(k_fold):
+            loss_tr, loss_te = cross_validation(y, x, k_indices, k, lambda_, degree)
+            rmse_tr_temp.append(loss_tr)
+            rmse_te_temp.append(loss_te)
+        rmse_tr.append(np.mean(rmse_tr_temp))
+        rmse_te.append(np.mean(rmse_te_temp))
+
+    cross_validation_visualization(lambdas, rmse_tr, rmse_te)
+    
+def cross_validation_visualization(lambds, mse_tr, mse_te):
+    """visualization the curves of mse_tr and mse_te."""
+    plt.semilogx(lambds, mse_tr, marker=".", color='b', label='train error')
+    plt.semilogx(lambds, mse_te, marker=".", color='r', label='test error')
+    plt.xlabel("lambda")
+    plt.ylabel("rmse")
+    plt.title("cross validation")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("cross_validation")
+
+
 
 

@@ -75,7 +75,7 @@ def run_ridge_regression(y,x):
 
 def tune_ridge_regression(y,x):
 	
-	lambdas = np.logspace(-5,0,20)
+	lambdas = np.logspace(-5,1,20)
 	degree = 4
 	ratio = 0.8
 
@@ -118,6 +118,7 @@ def run_logistic_regression(y, x):
 
 	y, tx = build_model_data(x,y) 
 	initial_w = np.zeros((tx.shape[1], 1))
+	y = np.expand_dims(y, axis=1)
 	
 
 	# initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791,
