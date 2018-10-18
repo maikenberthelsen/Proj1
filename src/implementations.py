@@ -3,6 +3,7 @@
 import numpy as np
 import datetime
 from helpers import *
+
 import matplotlib.pyplot as plt
 
 
@@ -228,6 +229,7 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
 
 
 
+
 # tentative suggestions for logistic regression
 def logistic_regression3(y, tx, initial_w, max_iters, gamma):
 
@@ -388,4 +390,5 @@ def cross_validation_visualization_degree(degs, mse_tr, mse_te):
     plt.grid(True)
     plt.savefig("cross_validation_deg")
     plt.show()
+
 
