@@ -21,8 +21,9 @@ def main():
 
 	#start_time = datetime.datetime.now()
 	input_data_train = remove999(input_data_train, yb_train)
+	input_data_test = remove999(input_data_test, yb_test)
 
-	input_data_train = removecols(input_data_train, [16,19,21])
+	#input_data_train = removecols(input_data_train, [16,19,21])
 
 	#end_time = datetime.datetime.now()
 	#execution_time = (end_time - start_time).total_seconds()

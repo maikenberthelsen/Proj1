@@ -151,6 +151,8 @@ def remove999(x, pred):
 
 
 
+def removecols(input_data_train, cols):
+    
 
 
 
