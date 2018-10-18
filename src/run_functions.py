@@ -64,8 +64,8 @@ def run_least_square(y,x):
 
 
 def run_ridge_regression(y,x):
-	lambda_ = 0.003
-	degree = 4
+	lambda_ = 0#.003
+	degree = 6
 
 	tx = build_poly(x,degree)
 
