@@ -228,6 +228,46 @@ def logistic_regression2(y, tx, initial_w, max_iters, gamma):
 
 
 
+# tentative suggestions for logistic regression
+def logistic_regression3(y, tx, initial_w, max_iters, gamma):
+
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    #threshold = 1e-8
+
+    for n_iter in range(max_iters):
+        # compute prediction, loss, gradient
+        # tx should maybe not be transposed
+        # not transposed when using large X
+        #print(tx.dot(w))
+        print(n_iter)
+        loss = 0
+        for i in range(len(y)):
+            loss = loss + (np.logaddexp(0, tx[i,:].T.dot(w)) - y[i]*tx[i].T.dot(w))
+        
+        prediction = sigmoid(tx.dot(w))
+        
+        #loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction)))# + ((lambda_/2)*(np.linalg.norm(w)**2))
+        gradient = tx.T.dot(prediction - y)
+
+        # gradient w by descent update
+        w = w - (gamma * gradient)
+        
+        # store w and loss
+        ws.append(w)
+        losses.append(loss)
+
+        #if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
+        #   break
+
+    #finds best parameters
+    min_ind = np.argmin(losses)
+    loss = losses[min_ind]
+    w = ws[min_ind][:]
+    
+    return w, loss
+
 ########################
 
 def build_k_indices(y, k_fold, seed):
