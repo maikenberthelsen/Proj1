@@ -243,7 +243,7 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
         # tx should maybe not be transposed
         # not transposed when using large X
         #print(tx.dot(w))
-        print(n_iter)
+        #print(n_iter)
         loss = 0
         for i in range(len(y)):
             loss = loss + (np.logaddexp(0, tx[i,:].T.dot(w)) - y[i]*tx[i].T.dot(w))
@@ -256,6 +256,7 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
         # gradient w by descent update
         w = w - (gamma * gradient)
         
+        #print(loss)
         # store w and loss
         ws.append(w)
         losses.append(loss)

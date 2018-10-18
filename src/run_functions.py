@@ -167,10 +167,11 @@ def run_logistic_regression3(y, x):
  #  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
  #  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
-	gamma = 0.1
+	gamma = 0.01
 	max_iters = 10
 
 	lr_w, lr_loss = logistic_regression3(y, tx, initial_w, max_iters, gamma)
+
 
 	return lr_w, lr_loss
 

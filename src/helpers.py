@@ -129,3 +129,29 @@ def split_data(y, x, ratio, seed=10):
 
     return x_tr, x_te, y_tr, y_te
 
+
+def remove999(x, pred):
+
+    sig = x[pred == 1,:];
+    back = x[pred == -1,:];
+
+    for i in range(x.shape[1]):
+        sig_mean = sum(sig[sig[:,i] != -999, i])/ len(sig[sig[:,i] != -999,i]);
+        back_mean = np.sum(back[back[:,i] != -999,i])/ len(back[back[:,i] != -999,i]);
+    
+        sig[sig[:,i] == -999,i] = sig_mean;
+        back[back[:,i] == -999,i] = back_mean;
+
+    x_fixed = np.vstack((sig,back));
+    #x_fixed = x_fixed[x_fixed[:,0].argsort(),]
+
+
+
+    return x_fixed
+
+
+
+
+
+
+
