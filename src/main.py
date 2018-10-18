@@ -67,15 +67,12 @@ def main():
 
 
 	#Make predictions
-<<<<<<< HEAD
+
 	y_pred = predict_labels(lr_w, tx_test)
 
 	create_csv_submission(ids_test, y_pred, 'test12_lr') #lager prediction-fila i Rolex-mappa med det navnet
-=======
-	#y_pred = predict_labels(rr_w, tx_test)
 
-	#create_csv_submission(ids_test, y_pred, 'test14_rr') #lager prediction-fila i Rolex-mappa med det navnet
->>>>>>> faf37bb46808ed1d370c68c2aca34ed860d864c2
+
 
 	return 0;
 
