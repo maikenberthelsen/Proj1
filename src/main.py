@@ -20,12 +20,13 @@ def main():
 
 	#print(input_data_train)
 	#start_time = datetime.datetime.now()
-	#input_data_train, input_data_test = remove999(input_data_train, yb_train, ids_train, input_data_test, ids_test)
+	input_data_train, input_data_test = remove999(input_data_train, yb_train, ids_train, input_data_test, ids_test)
 	#print(input_data_train)
 	
 	#print(input_data_train.shape)
 
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
+	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
 
 	#print(input_data_train.shape)
 
@@ -91,9 +92,9 @@ def main():
 
 	#Make predictions
 
-	y_pred = predict_labels(rlr_w, tx_test)
+	#y_pred = predict_labels(rr_w, tx_test)
 
-	create_csv_submission(ids_test, y_pred, 'test15_lr') #lager prediction-fila i Rolex-mappa med det navnet
+	#create_csv_submission(ids_test, y_pred, 'rr_0.01_6_-999_[16,19,21]') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
