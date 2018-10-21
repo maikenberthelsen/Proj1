@@ -14,6 +14,50 @@ def build_k_indices(y, k_fold, seed):
 
 ############## RIDGE REGRESSION #################
 
+
+def tune_ridge_regression(y,x):
+    
+    lambdas = np.logspace(-5,1,20)
+    degree = 4
+    ratio = 0.8
+
+    x_tr, x_te, y_tr, y_te = split_data(y, x, ratio)
+
+    tx_tr = build_poly(x_tr,degree)
+    tx_te = build_poly(x_te,degree)
+
+    rmse_tr = []
+    rmse_te = []
+
+    for ind, lambda_ in enumerate(lambdas):
+        # ridge regression
+        w_x, loss_tr = ridge_regression(y_tr, tx_tr, lambda_)
+        rmse_tr.append(np.sqrt(2 * compute_mse(y_tr, tx_tr, w_x)))
+        rmse_te.append(np.sqrt(2 * compute_mse(y_te, tx_te, w_x)))
+
+        #print("proportion={p}, degree={d}, lambda={l:.15f}, Training RMSE={tr:.10f}, Testing RMSE={te:.10f}".format(
+        #       p=ratio, d=degree, l=lambda_*10**15, tr=rmse_tr[ind], te=rmse_te[ind]))
+    
+    plt.semilogx(lambdas, rmse_tr, color='b', marker='*', label="Train error")
+    plt.semilogx(lambdas, rmse_te, color='r', marker='*', label="Test error")
+    plt.xlabel("lambda")
+    plt.ylabel("RMSE")
+    plt.title("Ridge regression for polynomial degree " + str(degree))
+    leg = plt.legend(loc=1, shadow=True)
+    leg.draw_frame(False)
+    plt.show()
+
+
+
+    #plot_train_test(rmse_tr, rmse_te, lambdas, degree)
+
+    #rr_w, rr_loss = ridge_regression(y, tx, lambda_)
+
+    #return rr_w, rr_loss, degree
+
+
+
+
 def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
     """return the loss of ridge regression."""
 
@@ -67,9 +111,9 @@ def ridgeregression_lambda(y, x):
 
 def ridgeregression_degree_lambda(y,x):
     seed = 1
-    k_fold = 4
-    lambdas = np.logspace(-3,0, 3)
-    degrees = range(2,10+1)
+    k_fold = 5
+    lambdas = np.logspace(-4,-2, 3)
+    degrees = range(2,20+1)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -149,12 +193,12 @@ def cross_validation_lr(y, x, k_indices, k, max_iters, gamma):
     return acc
 
 
-def logregression_lambda(y, x):
-    seed = 5
-    max_iters = 1000
+def logregression_gamma(y, x):
+    seed = 1
+    max_iters = 100
 
     k_fold = 5
-    gammas = np.logspace(-7, -0, 4)
+    gammas = np.logspace(-3, 0, 3)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -163,7 +207,6 @@ def logregression_lambda(y, x):
     accs = []
 
     for gamma in gammas:
-        print(gamma)
         acc_temp = []
 
         for k in range(k_fold):
@@ -171,8 +214,14 @@ def logregression_lambda(y, x):
             acc_temp.append(acc)
         accs.append(np.mean(acc_temp))
 
-    cross_validation_visualization_lr(gammas, accs)
+        print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
 
+    #cross_validation_visualization_lr(gammas, accs)
+
+
+
+
+############# PLOTS ##################
 
 def cross_validation_visualization(lambds, mse_tr, mse_te):
     """visualization the curves of mse_tr and mse_te."""

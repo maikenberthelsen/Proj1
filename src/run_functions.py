@@ -64,7 +64,7 @@ def run_least_square(y,x):
 
 
 def run_ridge_regression(y,x):
-	lambda_ = 0#.003
+	lambda_ = 0.01
 	degree = 6
 
 	tx = build_poly(x,degree)
@@ -73,45 +73,6 @@ def run_ridge_regression(y,x):
 
 	return rr_w, rr_loss, degree
 
-def tune_ridge_regression(y,x):
-	
-	lambdas = np.logspace(-5,1,20)
-	degree = 4
-	ratio = 0.8
-
-	x_tr, x_te, y_tr, y_te = split_data(y, x, ratio)
-
-	tx_tr = build_poly(x_tr,degree)
-	tx_te = build_poly(x_te,degree)
-
-	rmse_tr = []
-	rmse_te = []
-
-	for ind, lambda_ in enumerate(lambdas):
-		# ridge regression
-		w_x, loss_tr = ridge_regression(y_tr, tx_tr, lambda_)
-		rmse_tr.append(np.sqrt(2 * compute_mse(y_tr, tx_tr, w_x)))
-		rmse_te.append(np.sqrt(2 * compute_mse(y_te, tx_te, w_x)))
-
-		#print("proportion={p}, degree={d}, lambda={l:.15f}, Training RMSE={tr:.10f}, Testing RMSE={te:.10f}".format(
-		#       p=ratio, d=degree, l=lambda_*10**15, tr=rmse_tr[ind], te=rmse_te[ind]))
-	
-	plt.semilogx(lambdas, rmse_tr, color='b', marker='*', label="Train error")
-	plt.semilogx(lambdas, rmse_te, color='r', marker='*', label="Test error")
-	plt.xlabel("lambda")
-	plt.ylabel("RMSE")
-	plt.title("Ridge regression for polynomial degree " + str(degree))
-	leg = plt.legend(loc=1, shadow=True)
-	leg.draw_frame(False)
-	plt.show()
-
-
-
-	#plot_train_test(rmse_tr, rmse_te, lambdas, degree)
-
-	#rr_w, rr_loss = ridge_regression(y, tx, lambda_)
-
-	#return rr_w, rr_loss, degree
 
 
 def run_logistic_regression(y, x):
@@ -120,13 +81,6 @@ def run_logistic_regression(y, x):
 	initial_w = np.zeros((tx.shape[1], 1))
 	y = np.expand_dims(y, axis=1)
 	
-
-	# initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791,
-	# 	0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
- #  		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
- #  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
- #  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
-
 	gamma = 0.09
 	max_iters = 10
 

@@ -130,28 +130,47 @@ def split_data(y, x, ratio, seed=10):
     return x_tr, x_te, y_tr, y_te
 
 
-def remove999(x, pred):
+def remove999(x_train, pred_train, ids_train, x_test, ids_test): ## må sortere y også!!!
 
-    sig = x[pred == 1,:];
-    back = x[pred == -1,:];
+    x_train = np.concatenate((ids_train[:,None], x_train), axis=1)
+    x_test = np.concatenate((ids_test[:,None], x_test), axis=1)  
 
-    for i in range(x.shape[1]):
+    #Fix train data
+    sig = x_train[pred_train == 1,:];
+    back = x_train[pred_train == -1,:];
+
+    for i in range(1,x_train.shape[1]):
         sig_mean = sum(sig[sig[:,i] != -999, i])/ len(sig[sig[:,i] != -999,i]);
         back_mean = np.sum(back[back[:,i] != -999,i])/ len(back[back[:,i] != -999,i]);
+        test_mean = np.sum(x_test[x_test[:,i] != -999, i])/len(x_test[x_test[:,i] != -999,i]);
+        train_mean = np.sum(x_train[x_train[:,i] != -999, i])/len(x_train[x_train[:,i] != -999,i]);
+
+
+        #sig[sig[:,i] == -999,i] = sig_mean;
+        #back[back[:,i] == -999,i] = back_mean;
+        sig[sig[:,i] == -999,i] = train_mean;
+        back[back[:,i] == -999,i] = train_mean;
+        x_test[x_test[:,i] == -999,i] = test_mean; 
+
     
-        sig[sig[:,i] == -999,i] = sig_mean;
-        back[back[:,i] == -999,i] = back_mean;
+    x_train_fixed = np.vstack((sig,back))
+    x_train_fixed = x_train_fixed[x_train_fixed[:,0].argsort(),]
+    
 
-    x_fixed = np.vstack((sig,back));
-    #x_fixed = x_fixed[x_fixed[:,0].argsort(),]
+    x_train_fixed = x_train_fixed[:,1:]
+    x_test_fixed = x_test[:,1:]
 
-
-
-    return x_fixed
-
+    return x_train_fixed, x_test_fixed
 
 
-def removecols(input_data_train, cols):
+
+def removecols(input_data_train, input_data_test, cols):
+
+    input_data_train = np.delete(input_data_train,cols, axis = 1)
+    input_data_test = np.delete(input_data_test,cols, axis = 1)
+    
+
+    return input_data_train, input_data_test
     
 
 
