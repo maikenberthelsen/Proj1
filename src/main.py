@@ -26,7 +26,7 @@ def main():
 	#print(input_data_train.shape)
 
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
-	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
+	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
 
 	#print(input_data_train.shape)
 
@@ -85,8 +85,10 @@ def main():
 	#logregression_gamma(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
-	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
-	#print("w", rlr_w, "\n\n", "loss",rlr_loss)
+	rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
+	print("w", rlr_w, "\n\n", "loss",rlr_loss)
+
+	reglogregression_gamma(yb_train, x_train)
 
 
 

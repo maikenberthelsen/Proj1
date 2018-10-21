@@ -77,6 +77,14 @@ def sigmoid(t):
     return 1.0/(1 + np.exp(-t))
     #return np.exp(t)/(1 + np.exp(t))
 
+###############KOK###########################
+def calculate_hessian(y, tx, w):
+    """return the hessian of the loss function."""
+    pred = sigmoid(tx.dot(w))
+    pred = np.diag(pred.T[0])
+    r = np.multiply(pred, (1-pred))
+    return tx.T.dot(r).dot(tx)
+
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
     Generate a minibatch iterator for a dataset.

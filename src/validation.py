@@ -220,6 +220,64 @@ def logregression_gamma(y, x):
 
 
 
+def cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    y_te = np.expand_dims(y_te, axis=1)
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+
+    y_tr=y[tr_indices].flatten()
+    y_tr = np.expand_dims(y_tr, axis=1)
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+
+    y_tr,tx_tr = build_model_data(x_tr, y_tr)
+    y_te,tx_te = build_model_data(x_te, y_te)
+
+    initial_w = np.zeros((tx_tr.shape[1], 1))
+
+    w, loss = reg_logistic_regression(y_tr, tx_tr, lambda_, initial_w, max_iters, gamma)
+
+    # loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
+    # loss_tr = np.sqrt(2*compute_mse(y_tr, tx_tr, w))
+
+    y_pred = predict_labels(w, tx_te)
+
+    acc = float(np.sum(y_te == y_pred))/len(y_te)
+
+    return acc
+
+
+def reglogregression_gamma(y, x):
+    seed = 1
+    max_iters = 50
+
+    k_fold = 2
+    gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002] #np.logspace(-3, 0, 3)
+    lambdas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002]#np.logspace(-4, 0, 5)
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+
+    #accs = []
+    accs = np.zeros((len(gammas),len(lambdas)))
+
+    for i, gamma in enumerate(gammas):
+        #acc_temp_gamma = []
+        for j, lambda_ in enumerate(lambdas):
+            acc_temp= []
+
+            for k in range(k_fold):
+                acc = cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma)
+                acc_temp.append(acc)
+            accs[i][j] = np.mean(acc_temp)
+
+        print("gamma: ", gamma,"lambda: ", lambda_ ,' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+
+    cross_validation_visualization_rlr(gammas, lambdas, accs)
+
 
 ############# PLOTS ##################
 
@@ -245,6 +303,20 @@ def cross_validation_visualization_lr(gammas, acc):
     plt.savefig("cross_validation")
     plt.show()
 
+def cross_validation_visualization_rlr(gammas, lambdas, accs):
+#def plot_accs_degs(degs, lambdas, accs):
+    
+    for i in range(len(lambdas)):
+        label = 'lambda =' + str(lambdas[i])
+        plt.plot(gammas, accs[:,i], marker=".", label=label)
+    
+    plt.xlabel("gamma")
+    plt.ylabel("accuracy")
+    plt.title("cross validation degree accuracy")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("cross_validation_deg")
+    plt.show()
 
 def cross_validation_visualization_degree(degs, mse_tr, mse_te):
     """visualization the curves of mse_tr and mse_te."""

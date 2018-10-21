@@ -143,23 +143,17 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 		# not transposed when using large X
 		loss = 0
 		prediction = sigmoid(tx.dot(w))
-		for i in range(len(y)):
-			loss = loss + (np.logaddexp(0, tx[i,:].T.dot(w)) - y[i]*tx[i].T.dot(w)) + (lambda_/2)*np.linalg.norm(w)**2
-
-		testloss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))+ (lambda_/2)*np.linalg.norm(w)**2)
-		print("loss", loss, "testloss", testloss)
+		loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))+ (lambda_/2)*np.linalg.norm(w)**2)
 
 		gradient = tx.T.dot(prediction - y) + (lambda_*np.linalg.norm(w))
 
 		# gradient w by descent update
 		w = w - (gamma * gradient)
-		print("gamma", gamma, "gradient", gradient)
 		# store w and loss
 		ws.append(w)
 		losses.append(loss)
 
 	#finds best parameters
-	print(ws)
 	min_ind = np.argmin(losses)
 	loss = losses[min_ind]
 	w = ws[min_ind][:]
