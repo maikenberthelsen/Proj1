@@ -176,11 +176,14 @@ def cross_validation_lr(y, x, k_indices, k, max_iters, gamma):
     y_tr = np.expand_dims(y_tr, axis=1)
     x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
 
+    print('3')
+
     y_tr,tx_tr = build_model_data(x_tr, y_tr)
     y_te,tx_te = build_model_data(x_te, y_te)
 
     initial_w = np.zeros((tx_tr.shape[1], 1))
 
+    print('4')
     w, loss = logistic_regression3(y_tr, tx_tr, initial_w, max_iters, gamma)
 
     # loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
@@ -189,6 +192,7 @@ def cross_validation_lr(y, x, k_indices, k, max_iters, gamma):
     y_pred = predict_labels(w, tx_te)
 
     acc = float(np.sum(y_te == y_pred))/len(y_te)
+    print('5')
 
     return acc
 
@@ -211,7 +215,9 @@ def logregression_gamma(y, x):
         acc_temp = []
 
         for k in range(k_fold):
+            print('1')
             acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma)
+            print('2')
             acc_temp.append(acc)
         accs.append(np.mean(acc_temp))
 

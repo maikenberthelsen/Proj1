@@ -25,8 +25,8 @@ def main():
 	
 	#print(input_data_train.shape)
 
-	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
-	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
+	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
+	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
 
 	#print(input_data_train.shape)
 
