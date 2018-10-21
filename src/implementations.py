@@ -141,7 +141,9 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 		#tx should maybe not be transposed
 		# not transposed when using large X
 		prediction = sigmoid(tx.dot(w))
-		loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction))) + lambda_
+		for i in range(len(y)):
+            loss = loss + (np.logaddexp(0, tx[i,:].T.dot(w)) - y[i]*tx[i].T.dot(w)) + (lambda_/2)*np.linalg.norm(w)**2
+
 		gradient = tx.T.dot(prediction - y) + (lambda_*np.linalg.norm(w))
 
 		# gradient w by descent update

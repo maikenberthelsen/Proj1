@@ -10,11 +10,19 @@ import datetime
 def main():
 
 
+<<<<<<< HEAD
 	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/trainfixed.csv', sub_sample=False)
 	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
 	#yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
+=======
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/trainfixed.csv', sub_sample=False)
+	#yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
+	yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
+>>>>>>> 2a5a984c91401f91cde5cd7a1c3cc3adf4e5f98f
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=True)
 	#yb_test, input_data_test, ids_test = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/test.csv', sub_sample=True)
 
@@ -81,14 +89,20 @@ def main():
 
 	#ridgeregression_degree_lambda(yb_train, x_train)
 
-	logregression_gamma(yb_train, x_train)
+
+	#logregression_gamma(yb_train, x_train)
+
+	#logregression_lambda(yb_train, x_train)
+	rlr_w, rlr_loss = run_logistic_regression3(yb_train, x_train)
+	print(rlr_w, rlr_loss)
+
 
 
 	#Make predictions
 
-	#y_pred = predict_labels(rr_w, tx_test)
+	y_pred = predict_labels(rlr_w, tx_test)
 
-	#create_csv_submission(ids_test, y_pred, 'rr_0.01_6_-999_col') #lager prediction-fila i Rolex-mappa med det navnet
+	create_csv_submission(ids_test, y_pred, 'test15_lr') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
