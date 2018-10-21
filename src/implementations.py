@@ -137,7 +137,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	w = initial_w
 
 	for n_iter in range(max_iters):
-		print(n_iter)
+		#print(n_iter)
 		# compute prediction, loss, gradient
 		#tx should maybe not be transposed
 		# not transposed when using large X
@@ -159,7 +159,37 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	w = ws[min_ind][:]
 	return w, loss
 
+def logistic_regression_hessian(y, tx, initial_w, max_iters, gamma):
 
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    loss = 0
+    #threshold = 1e-8
+
+    for n_iter in range(max_iters):
+
+        loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w)))
+        prediction = sigmoid(tx.dot(w))
+        
+        gradient = tx.T.dot(prediction - y)
+        hessian = calculate_hessian(y, tx, w, prediction)
+
+        # gradient w by descent update
+        w = w - np.linalg.solve(hessian, gradient)
+
+        ws.append(w)
+        losses.append(loss)
+
+        #if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
+        #   break
+
+    #finds best parameters
+    #min_ind = np.argmin(losses)
+    #loss = losses[min_ind]
+    #w = ws[min_ind][:]
+    
+    return w, loss
 
 
 ################################################

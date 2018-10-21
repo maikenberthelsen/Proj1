@@ -129,6 +129,19 @@ def run_logistic_regression3(y, x):
 
 	return lr_w, lr_loss
 
+def run_logistic_regression_hessian(y, x):
+	y, tx = build_model_data(x,y) 
+	initial_w = np.zeros((tx.shape[1], 1))
+	y = np.expand_dims(y, axis=1)
+
+	gamma = 0.01
+	max_iters = 10
+
+	lr_w, lr_loss = logistic_regression_hessian(y, tx, initial_w, max_iters, gamma)
+
+
+	return lr_w, lr_loss
+
 def run_reg_logistic_regression(y, x):
 
 	y, tx = build_model_data(x,y) 
@@ -142,9 +155,9 @@ def run_reg_logistic_regression(y, x):
  #  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
  #  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
-	gamma = 0.0009
-	lambda_ = 0.001
-	max_iters = 10
+	gamma = 0.0004
+	lambda_ = 0.0001
+	max_iters = 100
 
 	rlr_w, rlr_loss = reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma)
 

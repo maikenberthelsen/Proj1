@@ -78,9 +78,9 @@ def sigmoid(t):
     #return np.exp(t)/(1 + np.exp(t))
 
 ###############KOK###########################
-def calculate_hessian(y, tx, w):
+def calculate_hessian(y, tx, w, pred):
     """return the hessian of the loss function."""
-    pred = sigmoid(tx.dot(w))
+    #pred = sigmoid(tx.dot(w))
     pred = np.diag(pred.T[0])
     r = np.multiply(pred, (1-pred))
     return tx.T.dot(r).dot(tx)
