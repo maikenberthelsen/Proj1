@@ -85,8 +85,8 @@ def main():
 	#logregression_gamma(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
-	rlr_w, rlr_loss = run_logistic_regression3(yb_train, x_train)
-	print(rlr_w, rlr_loss)
+	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
+	#print("w", rlr_w, "\n\n", "loss",rlr_loss)
 
 
 
@@ -95,6 +95,7 @@ def main():
 	#y_pred = predict_labels(rr_w, tx_test)
 
 	#create_csv_submission(ids_test, y_pred, 'rr_0.01_6_-999_[16,19,21]') #lager prediction-fila i Rolex-mappa med det navnet
+
 
 
 

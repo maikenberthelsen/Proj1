@@ -142,8 +142,8 @@ def run_reg_logistic_regression(y, x):
  #  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
  #  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
-	gamma = 0.09
-	lambda_ = 0.03
+	gamma = 0.0009
+	lambda_ = 0.003
 	max_iters = 10
 
 	rlr_w, rlr_loss = reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma)
