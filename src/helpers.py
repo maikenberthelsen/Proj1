@@ -173,6 +173,13 @@ def removecols(input_data_train, input_data_test, cols):
     return input_data_train, input_data_test
     
 
+def logpositive(x_train, x_test):
+    for i in range(1,x_train.shape[1]):
+        if (np.all(x_train[:,i]) > 0 and np.all(x_test[:,i] > 0)):
+            x_train[:,i] = np.log10(x_train[:,i])
+            x_test[:,i] = np.log10(x_test[:,i])
+
+    return x_train, x_test
 
 
 

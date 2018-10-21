@@ -245,24 +245,23 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
     ws = [initial_w]
     losses = []
     w = initial_w
+    loss = 0
     #threshold = 1e-8
 
     for n_iter in range(max_iters):
-        # compute prediction, loss, gradient
-        # tx should maybe not be transposed
-        # not transposed when using large X
-        #print(tx.dot(w))
-        #print(n_iter)
 
         loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w)))
-        #prediction = sigmoid(tx.dot(w))
+        prediction = sigmoid(tx.dot(w))
         
-		#gradient = tx.T.dot(prediction - y)
+        gradient = tx.T.dot(prediction - y)
 
         # gradient w by descent update
-        #w -= (gamma * gradient)
+        w = w - (gamma * gradient)
+        #print(gamma)
+        #print(gamma * gradient)
+        #print(w)
         
-        w -= (gamma * tx.T.dot(sigmoid(tx.dot(w)) - y))
+        #w -= (gamma * tx.T.dot(sigmoid(tx.dot(w)) - y))
         #print(loss)
         # store w and loss
         ws.append(w)
@@ -272,9 +271,9 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
         #   break
 
     #finds best parameters
-    min_ind = np.argmin(losses)
-    loss = losses[min_ind]
-    w = ws[min_ind][:]
+    #min_ind = np.argmin(losses)
+    #loss = losses[min_ind]
+    #w = ws[min_ind][:]
     
     return w, loss
 

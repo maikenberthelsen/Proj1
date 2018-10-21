@@ -26,12 +26,14 @@ def main():
 	#print(input_data_train.shape)
 
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
-	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
+	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
 
 	#print(input_data_train.shape)
 
 	#end_time = datetime.datetime.now()
 	#execution_time = (end_time - start_time).total_seconds()
+
+	input_data_train, input_data_test = logpositive(input_data_train, input_data_test)
 
 	x_train = standardize(input_data_train)
 	x_test = standardize(input_data_test)
@@ -79,10 +81,10 @@ def main():
 
 	#ridgeregression_lambda(yb_train, x_train)
 
-	#ridgeregression_degree_lambda(yb_train, x_train)
+	ridgeregression_degree_lambda(yb_train, x_train)
 
 
-	logregression_gamma(yb_train, x_train)
+	#logregression_gamma(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
 	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
@@ -94,7 +96,7 @@ def main():
 
 	#y_pred = predict_labels(rr_w, tx_test)
 
-	#create_csv_submission(ids_test, y_pred, 'rr_0.01_6_-999_[16,19,21]') #lager prediction-fila i Rolex-mappa med det navnet
+	#create_csv_submission(ids_test, y_pred, 'rr_0.001_8_-999_log') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
