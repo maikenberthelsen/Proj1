@@ -252,8 +252,7 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
         # tx should maybe not be transposed
         # not transposed when using large X
         #print(tx.dot(w))
-        print(n_iter)
-        loss = 0
+
         loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w)))
         prediction = sigmoid(tx.dot(w))
         

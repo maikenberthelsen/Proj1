@@ -194,11 +194,12 @@ def cross_validation_lr(y, x, k_indices, k, max_iters, gamma):
 
 
 def logregression_gamma(y, x):
+    print('start')
     seed = 1
-    max_iters = 300
+    max_iters = 100
 
-    k_fold = 5
-    gammas = [0.001] #np.logspace(-3, 0, 3)
+    k_fold = 2
+    gammas = [0.01] #np.logspace(-3, 0, 3)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
