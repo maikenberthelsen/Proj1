@@ -20,7 +20,7 @@ def main():
 
 	#print(input_data_train)
 	#start_time = datetime.datetime.now()
-	#input_data_train, input_data_test = remove999(input_data_train, yb_train, ids_train, input_data_test, ids_test)
+	input_data_train, input_data_test = remove999(input_data_train, yb_train, ids_train, input_data_test, ids_test)
 	#print(input_data_train)
 	
 	#print(input_data_train.shape)
@@ -84,16 +84,16 @@ def main():
 	#logregression_gamma(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
-	rlr_w, rlr_loss = run_logistic_regression3(yb_train, x_train)
-	print(rlr_w, rlr_loss)
+	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
+	#print("w", rlr_w, "\n\n", "loss",rlr_loss)
 
 
 
 	#Make predictions
 
-	y_pred = predict_labels(rlr_w, tx_test)
+	#y_pred = predict_labels(rlr_w, tx_test)
 
-	create_csv_submission(ids_test, y_pred, 'test15_lr') #lager prediction-fila i Rolex-mappa med det navnet
+	#create_csv_submission(ids_test, y_pred, 'test15_lr') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
