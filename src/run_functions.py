@@ -55,7 +55,7 @@ def run_stochastic_gradient_descent(y,x):
 
 
 def run_least_square(y,x):
-	degree = 5
+	degree = 12
 	tx = build_poly(x,degree)
 
 	ls_w, ls_loss = least_squares(y, tx)

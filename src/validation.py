@@ -30,24 +30,24 @@ def cross_validation_ls(y, x, k_indices, k, degree):
     tx_tr = build_poly(x_tr, degree)
     tx_te = build_poly(x_te, degree)
 
-    w, loss = least_squares(y_tr, tx_tr, lambda_)
+    w, loss = least_squares(y_tr, tx_tr)
 
 
-    loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
-    loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
+    #loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
+    #loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
 
 
     y_pred = predict_labels(w, tx_te)
 
     acc = float(np.sum(y_te == y_pred))/len(y_te)
 
-    return loss_tr, loss_te, acc
+    return acc
 
 
 def leastsquares_degree(y, x):
     seed = 5
     k_fold = 10
-    degrees = [3,4,5,6,7]
+    degrees = range(7,12+1)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -59,7 +59,7 @@ def leastsquares_degree(y, x):
         acc_temp= []
         
         for k in range(k_fold):
-            loss_tr, loss_te, acc = cross_validation_ls(y, x, k_indices, k, degree)
+            acc = cross_validation_ls(y, x, k_indices, k, degree)
             acc_temp.append(acc)
 
         accs.append(np.mean(acc_temp))
