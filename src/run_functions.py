@@ -17,10 +17,8 @@ def run_gradient_descent(y, x):
   		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
   		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
 
-	start_time = datetime.datetime.now()
 	gd_w, gd_loss = least_squares_GD(y, tx, initial_w, max_iters, gamma)
-	end_time = datetime.datetime.now()
-	exection_time = (end_time - start_time).total_seconds()
+
 
 	print('GD\n time = ', exection_time)
 	print('w = ', gd_w)

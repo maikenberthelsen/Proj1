@@ -13,6 +13,68 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices)
 
 
+############# GRADIENT DESCENT ################
+
+def cross_validation_gd(y, x, k_indices, k, gamma, max_iters):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+    
+    y_tr=y[tr_indices].flatten()
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+
+    y_tr, tx_tr = build_model_data(x_tr, y_tr)
+    y_te, tx_te = build_model_data(x_te, y_te)
+    
+    initial_w = np.zeros((tx_tr.shape[1], 1))
+
+    w, loss = least_squares_GD(y_tr, tx_tr, initial_w, max_iters, gamma)
+
+    #loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
+    #loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
+
+
+    y_pred = predict_labels(w, tx_te)
+
+    acc = float(np.sum(y_te == y_pred))/len(y_te)
+
+    return acc
+
+
+def gradientdescent_gamma(y, x):
+    seed = 1
+    k_fold = 10
+    max_iters = 5
+    gammas = np.logspace(-4,-1,4)
+
+    
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    
+    accs = []
+
+    for gamma in gammas:
+        acc_temp= []
+        
+        for k in range(k_fold):
+            acc = cross_validation_gd(y, x, k_indices, k, gamma, max_iters)
+            acc_temp.append(acc)
+
+        accs.append(np.mean(acc_temp))
+        
+        print(degree, ': Acc = ', np.mean(acc_temp), ', std = ', np.std(acc_temp))
+
+
+    #cross_validation_visualization(lambdas, rmse_tr, rmse_te)
+    
+
+
+
+
 ############# LEAST SQUARES ##################
 
 
@@ -33,10 +95,6 @@ def cross_validation_ls(y, x, k_indices, k, degree):
     w, loss = least_squares(y_tr, tx_tr)
 
 
-    #loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
-    #loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
-
-
     y_pred = predict_labels(w, tx_te)
 
     acc = float(np.sum(y_te == y_pred))/len(y_te)
@@ -45,8 +103,8 @@ def cross_validation_ls(y, x, k_indices, k, degree):
 
 
 def leastsquares_degree(y, x):
-    seed = 5
-    k_fold = 10
+    seed = 1
+    k_fold = 5
     degrees = range(7,12+1)
 
     # split data in k fold
@@ -147,7 +205,7 @@ def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
     return loss_tr, loss_te, acc
 
 def ridgeregression_lambda(y, x):
-    seed = 5
+    seed = 1
     degree = 4
     k_fold = 10
     lambdas = np.logspace(-3, 0, 30)

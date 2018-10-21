@@ -50,8 +50,8 @@ def main():
 	#rr_w, rr_loss, degree = run_ridge_regression(yb_train,x_train)
 	#tx_test = build_poly(x_test,degree)
 
-	ls_w, ls_loss, degree = run_least_square(yb_train,x_train)
-	tx_test = build_poly(x_test,degree)
+	#ls_w, ls_loss, degree = run_least_square(yb_train,x_train)
+	#tx_test = build_poly(x_test,degree)
 
 	#lr_w, lr_loss = run_logistic_regression3(yb_train, x_train)
 	#print(lr_w, lr_loss)
@@ -59,6 +59,7 @@ def main():
 
 	############# VALIDATIONS ###############
 
+	gradientdescent_gamma(yb_train, x_train)
 	
 	#leastsquares_degree(yb_train, x_train)
 	
@@ -72,18 +73,18 @@ def main():
 	#logregression_gamma(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
-	rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
-	print("w", rlr_w, "\n\n", "loss",rlr_loss)
+	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
+	#print("w", rlr_w, "\n\n", "loss",rlr_loss)
 
-	reglogregression_gamma(yb_train, x_train)
+	#reglogregression_gamma(yb_train, x_train)
 
 
 
 	#Make predictions
 
-	y_pred = predict_labels(ls_w, tx_test)
+	#y_pred = predict_labels(ls_w, tx_test)
 
-	create_csv_submission(ids_test, y_pred, 'ls_12_-999_log') #lager prediction-fila i Rolex-mappa med det navnet
+	#create_csv_submission(ids_test, y_pred, 'ls_12_-999_log') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
