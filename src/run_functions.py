@@ -175,6 +175,27 @@ def run_logistic_regression3(y, x):
 
 	return lr_w, lr_loss
 
+def run_reg_logistic_regression(y, x):
+
+	y, tx = build_model_data(x,y) 
+	initial_w = np.zeros((tx.shape[1], 1))
+	y = np.expand_dims(y, axis=1)
+	
+
+	# initial_w = [-0.3428, 0.01885391, -0.26018961, -0.22812764, -0.04019317, -0.00502791,
+	# 	0.32302178, -0.01464156, 0.23543933, 0.00973278, -0.0048371, -0.13453445,
+ #  		0.13354281, -0.0073677, 0.22358728, 0.01132979, -0.00372824, 0.25739398,
+ #  		0.02175267,  0.01270975,  0.12343641, -0.00613063, -0.09086221, -0.20328519,
+ #  		0.05932847, 0.049829, 0.05156299, -0.01579745, -0.00793358, -0.00886158, -0.10660545]
+
+	gamma = 0.09
+	lambda_ = 0.03
+	max_iters = 10
+
+	rlr_w, rlr_loss = reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma)
+
+	return rlr_w, rlr_loss
+
 
 
 

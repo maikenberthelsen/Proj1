@@ -10,11 +10,11 @@ import datetime
 def main():
 
 
-	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=True)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/trainfixed.csv', sub_sample=False)
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
-	#yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
-	#yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
+	#yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=True)
+	yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=True)
 	#yb_test, input_data_test, ids_test = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/test.csv', sub_sample=True)
 
@@ -74,16 +74,18 @@ def main():
 
 	#ridgeregression_lambda(yb_train, x_train)
 
-	ridgeregression_degree_lambda(yb_train, x_train)
+	#ridgeregression_degree_lambda(yb_train, x_train)
 
 	#logregression_lambda(yb_train, x_train)
+	rlr_w, rlr_loss = run_logistic_regression3(yb_train, x_train)
+	print(rlr_w, rlr_loss)
 
 
 	#Make predictions
 
-	#y_pred = predict_labels(lr_w, tx_test)
+	y_pred = predict_labels(rlr_w, tx_test)
 
-	#create_csv_submission(ids_test, y_pred, 'test12_lr') #lager prediction-fila i Rolex-mappa med det navnet
+	create_csv_submission(ids_test, y_pred, 'test15_lr') #lager prediction-fila i Rolex-mappa med det navnet
 
 
 
