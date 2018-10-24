@@ -45,8 +45,6 @@ def main():
 
 	gd_w, gd_loss = run_gradient_descent(yb_train, x_train)
 
-
-
 	#sgd_w, sgd_loss = run_stochastic_gradient_descent(yb_train, x_train)
 
 	#rr_w, rr_loss, degree = run_ridge_regression(yb_train,x_train)
