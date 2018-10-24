@@ -22,6 +22,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
 
 		# gradient w by descent update
 		w = w - gamma * grad
+		
 		# store w and loss
 		ws.append(w)
 		losses.append(loss)
