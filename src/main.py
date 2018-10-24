@@ -43,7 +43,7 @@ def main():
 
 	########### RUN FUNCTIONS #############
 
-	gd_w, gd_loss = run_gradient_descent(yb_train, x_train)
+	#gd_w, gd_loss = run_gradient_descent(yb_train, x_train)
 
 	#sgd_w, sgd_loss = run_stochastic_gradient_descent(yb_train, x_train)
 
@@ -71,7 +71,7 @@ def main():
 	#leastsquares_degree(yb_train, x_train)
 
 	
-	#ridgeregression_lambda(yb_train, x_train)
+	ridgeregression_lambda(yb_train, x_train)
 
 	#ridgeregression_degree_lambda(yb_train, x_train)
 

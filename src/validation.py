@@ -189,30 +189,40 @@ def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
     return loss_tr, loss_te, acc
 
 
+# Test which lambda gives best accuracy for specified degree
 def ridgeregression_lambda(y, x):
     seed = 1
-    degree = 4
-    k_fold = 10
-    lambdas = np.logspace(-3, 0, 30)
+    degree = 10
+    k_fold = 4
+    lambdas = np.logspace(-5, 0, 6)
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     # define lists to store the loss of training data and test data
     rmse_tr = []
     rmse_te = []
+    accs = []
+    stds = []
 
     for lambda_ in lambdas:
         rmse_tr_temp= []
         rmse_te_temp= []
+        acc_temp = []
         for k in range(k_fold):
             loss_tr, loss_te, acc = cross_validation_rr(y, x, k_indices, k, lambda_, degree)
             rmse_tr_temp.append(loss_tr)
             rmse_te_temp.append(loss_te)
+            acc_temp.append(acc)
         rmse_tr.append(np.mean(rmse_tr_temp))
         rmse_te.append(np.mean(rmse_te_temp))
+        accs.append(np.mean(acc_temp))
+        stds.append(np.std(acc_temp))
 
-    cross_validation_visualization(lambdas, rmse_tr, rmse_te)
+        print(degree, ', ', lambda_, ': acc = ', np.mean(acc_temp), ', std = ', np.std(acc_temp))
+
+    rr_lambda_visualization(degree, lambdas, accs, stds)
     
 
+# Test which combination of degree/lambda gives best accuracy
 def ridgeregression_degree_lambda(y,x):
     seed = 1
     k_fold = 10
@@ -260,13 +270,11 @@ def ridgeregression_degree_lambda(y,x):
             accvectors = np.vstack((accvectors, acc))
             stds = np.vstack((stds,std))
 
-    #rr_degree_lambda_visualization(degrees, lambdas, accvectors, stds)
-    rr_degree_visualization(degrees, 0.0001, accvectors, stds)    
+    rr_degree_lambda_visualization(degrees, lambdas, accvectors, stds)
+    #rr_degree_visualization(degrees, 0.0001, accvectors, stds)    
 
 
 def rr_degree_lambda_visualization(degs, lambdas, accs, stds):
-    
-
     for i in range(len(lambdas)):
         label = 'lambda =' + str(lambdas[i])
         plt.errorbar(degs, accs[:,i], yerr=stds[:,i], marker=".", color='b', label=label)
@@ -292,6 +300,18 @@ def rr_degree_visualization(degs, lambda_, accs, stds):
     plt.savefig("cross_validation_deg")
     plt.show()
 
+def rr_lambda_visualization(degree, lambdas, accs, stds):
+
+    plt.errorbar(lambdas, accs, yerr=stds, marker=".", color='b', label='degree = 10')
+
+    plt.xscale('log')
+    plt.xlabel("lambda")
+    plt.ylabel("accuracy")
+    plt.title("Ridge regression cross validation")
+    plt.legend(loc=1)
+    plt.grid(True)
+    plt.savefig("cross_validation_deg")
+    plt.show()
 
 
 
