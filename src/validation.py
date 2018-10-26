@@ -192,7 +192,7 @@ def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
 # Test which lambda gives best accuracy for specified degree
 def ridgeregression_lambda(y, x):
     seed = 1
-    degree = 10
+    degree = 12
     k_fold = 4
     lambdas = np.logspace(-5, 0, 6)
     # split data in k fold
@@ -225,9 +225,9 @@ def ridgeregression_lambda(y, x):
 # Test which combination of degree/lambda gives best accuracy
 def ridgeregression_degree_lambda(y,x):
     seed = 1
-    k_fold = 10
-    lambdas = [0]#[0.0001]#np.logspace(-6,-3, 4)
-    degrees = range(1,12+1)
+    k_fold = 4
+    lambdas = [0.000005,0.00001,0.00005,0.0001,0.0005,0.001]#[0.0001]#np.logspace(-6,-3, 4)
+    degrees = range(10,14+1)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -440,6 +440,39 @@ def logregression_gamma(y, x):
         print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
     print(accs)
     cross_validation_visualization_lr(gammas, accs)
+
+def logregression_gamma_degree(y, x):
+    print('start')
+    seed = 1
+    max_iters = 10
+    #degree = 1
+    degrees = range(1,14+1)
+    k_fold = 4
+    gammas = [0.00001,0.00005,0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
+
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+
+    accs = []
+
+    for d_ind,gamma in enumerate(gammas):
+        acc_temp = []
+        for ind, degree in enumerate(degrees):
+            acc_1 = []
+            for k in range(k_fold):
+                acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree)
+                acc_1.append(acc)
+            acc_temp.append(np.mean(acc_1))
+
+            print(gamma, degree, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+        if d_ind == 0:
+            accs = acc_temp
+        else:
+            accs = np.vstack((accs, acc_temp))
+    print(accs)
+    cross_validation_visualization_lr(gammas, accs)
+
 
 
 

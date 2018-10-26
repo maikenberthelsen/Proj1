@@ -11,10 +11,10 @@ def main():
 
 	############### DATA LOADING ################
 
-	yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
-	yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
-	#yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
-	#yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
+	#yb_train, input_data_train, ids_train = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/train.csv', sub_sample=False)
+	#yb_test, input_data_test, ids_test = load_csv_data('/Users/sigrid/Documents/Skole/Rolex/data/test.csv', sub_sample=False)
+	yb_train, input_data_train, ids_train = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/train.csv', sub_sample=False)
+	yb_test, input_data_test, ids_test = load_csv_data('/Users/maikenberthelsen/Documents/EPFL/Machine Learning/Project 1/Rolex/data/test.csv', sub_sample=False)
 	#yb_train, input_data_train, ids_train = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/train.csv', sub_sample=True)
 	#yb_test, input_data_test, ids_test = load_csv_data('/Users/idasandsbraaten/Dropbox/Rolex/data/test.csv', sub_sample=True)
 
@@ -29,6 +29,7 @@ def main():
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,23,25,26,27,28,29])
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
+	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [14,24,25,27])
 
 	# Turn positive columns into logarithm
 	input_data_train, input_data_test = logpositive(input_data_train, input_data_test)
@@ -36,9 +37,12 @@ def main():
 	# Standardize and sentralize data
 	x_train = standardize(input_data_train)
 	x_test = standardize(input_data_test)
+
+	#x_train = standardize_with_bootstrapping(input_data_train, 1000)
+	#x_test = standardize_with_bootstrapping(input_data_test, 1000)
 	
 	# Build model test data
-	y_test, tx_test = build_model_data(x_test,yb_test)
+	#y_test, tx_test = build_model_data(x_test,yb_test)
 
 
 	########### RUN FUNCTIONS #############
@@ -51,6 +55,7 @@ def main():
 	#tx_test = build_poly(x_test,degree)
 
 	#ls_w, ls_loss, degree = run_least_square(yb_train,x_train)
+	#print(ls_w.shape)
 	#tx_test = build_poly(x_test,degree)
 
 	#lr_w, lr_loss = run_logistic_regression3(yb_train, x_train)
@@ -71,7 +76,7 @@ def main():
 	#leastsquares_degree(yb_train, x_train)
 
 	
-	ridgeregression_lambda(yb_train, x_train)
+	#ridgeregression_lambda(yb_train, x_train)
 
 	#ridgeregression_degree_lambda(yb_train, x_train)
 
@@ -82,15 +87,25 @@ def main():
 
 	#logregression_lambda(yb_train, x_train)
 
+	#logregression_gamma_degree(yb_train, x_train)
+
 	#reglogregression_gamma(yb_train, x_train)
 
-
+	#yt = yb_train[:len(yb_train)//2]
+	#xt = x_train[:len(yb_train)//2,:]
+	#yte = yb_train[len(yb_train)//2+1::]
+	#xte = x_train[len(yb_train)//2+1::,:]
+	#print(yt.shape, xt.shape, yte.shape,xte.shape)
+	y_pred = stacking(yb_train,x_train,yb_test,x_test)
+	#print(pred)
+	#acc = float(np.sum(yte == pred))/len(yte)
+	#print("accuracy = ", acc)
 
 
 	#Make predictions
 	
 	#y_pred = predict_labels(rr_w, tx_test)
-	#create_csv_submission(ids_test, y_pred, 'rr_0.0001_10_-999_log') #lager prediction-fila i Rolex-mappa med det navnet
+	create_csv_submission(ids_test, y_pred, 'stacking') #lager prediction-fila i Rolex-mappa med det navnet
 
 	return 0;
 

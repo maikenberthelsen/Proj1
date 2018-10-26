@@ -31,6 +31,15 @@ def predict_labels(weights, data):
 
     return y_pred
 
+def predict_labels_row(weights, data):
+    """Generates class predictions given weights, and a test data matrix"""
+    y_pred = np.dot(data, weights)
+    if y_pred <= 0:
+        y_pred = -1
+    else:
+        y_pred = 1
+    return y_pred
+
 def create_csv_submission(ids, y_pred, name):
     """
     Creates an output file in csv format for submission to kaggle
@@ -190,5 +199,26 @@ def logpositive(x_train, x_test):
 
     return x_train, x_test
 
+def bootstrap_data(x, num_subSamp):
+    temp_mean = np.zeros((1,x.shape[1]))
+    temp_std = np.zeros((1,x.shape[1]))
+    for i in range(num_subSamp):  
+        #choosing a random subsample(with replacement) of the data with size equal to half of the sample size
+        #a= x[np.random.choice(x.shape[0],x.shape[0]//2, replace=True)]
+        a = x[np.random.randint(x.shape[0], size=x.shape[0]//2), :]
+        temp_mean += np.mean(a, axis=0)
+        temp_std += np.std(a, axis=0)
+    bootstrapMean = temp_mean/num_subSamp
+    bootstrapStd = temp_std/num_subSamp
+    return bootstrapMean, bootstrapStd
+
+def standardize_with_bootstrapping(x,num_subSamp):
+    """Standardize the original data set."""
+    b_mean, b_std = bootstrap_data(x, num_subSamp)
+    x -= b_mean
+    #print(x)
+    x /= b_std
+
+    return x
 
 
