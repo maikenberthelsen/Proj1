@@ -1,4 +1,4 @@
-# CS-433 Machine Learning Project 1
+# CS-433 Machine Learning - Project 1
 Project of CS-433 - Machine Learning, EPFL (Fall 2018).
 
 Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
