@@ -71,7 +71,6 @@ def least_squares(y, tx):
 	a = tx.T.dot(tx)
 	b = tx.T.dot(y)
 	w = np.linalg.solve(a, b)
-
 	e = y - tx.dot(w)
 	loss = e.dot(e) / (2 * len(e))
 
@@ -79,64 +78,20 @@ def least_squares(y, tx):
 
 
 def ridge_regression(y, tx, lambda_):
-
 	aI = 2 * tx.shape[0] * lambda_ * np.identity(tx.shape[1])
 	a = tx.T.dot(tx) + aI
 	b = tx.T.dot(y)
 	w = np.linalg.solve(a, b)
-
 	e = y - tx.dot(w)
 	loss = e.dot(e) / (2 * len(e))
 
 	return w, loss
 
 
-# tentative suggestions for logistic regression
-def logistic_regression(y, tx, initial_w, max_iters, gamma):
-
-	ws = [initial_w]
-	losses = []
-	w = initial_w
-	#threshold = 1e-8
-
-	for n_iter in range(max_iters):
-		# compute prediction, loss, gradient
-		# tx should maybe not be transposed
-		# not transposed when using large X
-		#print(tx.dot(w))
-		print(n_iter)
-		
-		prediction = sigmoid(tx.dot(w))
-		
-		loss = -(y.T.dot(np.log(prediction)) + (1-y).T.dot(np.log(1-prediction)))# + ((lambda_/2)*(np.linalg.norm(w)**2))
-		gradient = tx.T.dot(prediction - y)
-
-		# gradient w by descent update
-		w = w - (gamma * gradient)
-		
-		# store w and loss
-		ws.append(w)
-		losses.append(loss)
-
-		#if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
-		#	break
-
-	#finds best parameters
-	min_ind = np.argmin(losses)
-	loss = losses[min_ind]
-	w = ws[min_ind][:]
-	
-	return w, loss
-
-
-
-
-
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
 	w = initial_w
-
 	for n_iter in range(max_iters):
 		#print(n_iter)
 		# compute prediction, loss, gradient
@@ -145,7 +100,6 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 		loss = 0
 		prediction = sigmoid(tx.dot(w))
 		loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))+ (lambda_/2)*np.linalg.norm(w)**2)
-
 		gradient = tx.T.dot(prediction - y) + (lambda_*np.linalg.norm(w))
 
 		# gradient w by descent update
@@ -170,15 +124,16 @@ def logistic_regression_hessian(y, tx, initial_w, max_iters, gamma):
 
     for n_iter in range(max_iters):
 
-        loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w)))
+        loss = sum(sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))))
+
+        #print(loss)
         prediction = sigmoid(tx.dot(w))
-        
         gradient = tx.T.dot(prediction - y)
         hessian = calculate_hessian(y, tx, w, prediction)
 
         # gradient w by descent update
-        w = w - np.linalg.solve(hessian, gradient)
-
+        hessian_inv = inverse = np.linalg.inv(hessian)
+        w = w - (hessian_inv*gradient*gamma)#np.linalg.solve(hessian, gradient)
         ws.append(w)
         losses.append(loss)
 
@@ -186,9 +141,9 @@ def logistic_regression_hessian(y, tx, initial_w, max_iters, gamma):
         #   break
 
     #finds best parameters
-    #min_ind = np.argmin(losses)
-    #loss = losses[min_ind]
-    #w = ws[min_ind][:]
+    min_ind = np.argmin(losses)
+    loss = losses[min_ind]
+    w = ws[min_ind][:]
     
     return w, loss
 
@@ -219,76 +174,31 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     Do one step of gradient descen using logistic regression.
     Return the loss and the updated w.
     """
-
-    # print(y.shape)
-    # print(tx.shape)
-    # print(w.shape)
-    
-
     loss = calculate_loss_lr(y, tx, w)
     grad = calculate_gradient(y, tx, w)
-    #print(grad.shape)
-    #print(w.shape)
-
     w -= gamma * grad
     return loss, w
 
 
-def logistic_regression2(y, tx, initial_w, max_iters, gamma):
-    # init parameters
-
-    threshold = 1e-8
-    losses = []
-    w = initial_w
-
-    # start the logistic regression
-    for iter in range(max_iters):
-        print(iter)
-        
-        # get loss and update w.
-        loss, w = learning_by_gradient_descent(y, tx, w, gamma)
-        
-        # log info
-        if iter % 100 == 0:
-            print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
-        
-        # converge criterion
-        losses.append(loss)
-        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
-            break
-    # visualization
-    #print("loss={l}".format(l=calculate_loss_lr(y, tx, w)))
-
-    return w, loss
 
 
 
 
 # tentative suggestions for logistic regression
-def logistic_regression3(y, tx, initial_w, max_iters, gamma):
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
 
     ws = [initial_w]
     losses = []
     w = initial_w
     loss = 0
     #threshold = 1e-8
-
     for n_iter in range(max_iters):
-
-        loss = sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w)))
+        loss = sum(sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))))
         prediction = sigmoid(tx.dot(w))
-        
         gradient = tx.T.dot(prediction - y)
 
         # gradient w by descent update
         w = w - (gamma * gradient)
-        #print(gamma)
-        #print(gamma * gradient)
-        #print(w)
-        
-        #w -= (gamma * tx.T.dot(sigmoid(tx.dot(w)) - y))
-        #print(loss)
-        # store w and loss
         ws.append(w)
         losses.append(loss)
 
@@ -296,9 +206,9 @@ def logistic_regression3(y, tx, initial_w, max_iters, gamma):
         #   break
 
     #finds best parameters
-    #min_ind = np.argmin(losses)
-    #loss = losses[min_ind]
-    #w = ws[min_ind][:]
+    min_ind = np.argmin(losses)
+    loss = losses[min_ind]
+    w = ws[min_ind][:]
     
     return w, loss
 

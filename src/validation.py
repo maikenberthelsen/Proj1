@@ -1,6 +1,7 @@
 
 from implementations import *
 from helpers import *
+from run_functions import *
 
 def build_k_indices(y, k_fold, seed):
     """build k indices for k-fold."""
@@ -11,9 +12,6 @@ def build_k_indices(y, k_fold, seed):
     k_indices = [indices[k * interval: (k + 1) * interval]
                  for k in range(k_fold)]
     return np.array(k_indices)
-
-
-
 
 
 ############# GRADIENT DESCENT ################
@@ -31,13 +29,8 @@ def cross_validation_gd(y, x, k_indices, k, gamma, max_iters):
 
     y_tr, tx_tr = build_model_data(x_tr, y_tr)
     y_te, tx_te = build_model_data(x_te, y_te)
-
-    
-    
     initial_w = np.zeros(tx_tr.shape[1])
     w, loss = least_squares_GD(y_tr, tx_tr, initial_w, max_iters, gamma)
-
-
     y_pred = predict_labels(w, tx_te)
     acc = float(np.sum(y_te == y_pred))/len(y_te)
 
@@ -48,7 +41,7 @@ def gradientdescent_gamma(y, x):
     seed = 1
     k_fold = 10
     max_iters = 1000
-    gammas = [0.1]#[0.001,0.005,0.01,0.05,0.1, 0.15,0.2,0.3]
+    gammas = [0.001,0.005,0.01,0.05,0.1, 0.15,0.2]#,0.3]
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -58,12 +51,10 @@ def gradientdescent_gamma(y, x):
     stds = []
 
     for gamma in gammas:
-        acc_temp = []
-        
+        acc_temp = []   
         for k in range(k_fold):
             acc = cross_validation_gd(y, x, k_indices, k, gamma, max_iters)
             acc_temp.append(acc)
-
         accs.append(np.mean(acc_temp))
         stds.append(np.std(acc_temp))
         
@@ -73,23 +64,7 @@ def gradientdescent_gamma(y, x):
     gradientdescent_gamma_visualization(gammas, accs, stds)
     
 
-def gradientdescent_gamma_visualization(gammas, accs, stds):
-    plt.errorbar(gammas, accs, yerr=stds, marker=".", color='b', label='Accuracy')
-    plt.xscale('log')
-    plt.xlabel("degree")
-    plt.ylabel("accuracy")
-    plt.title("Gradient descent cross validation")
-    plt.legend(loc=2)
-    plt.grid(True)
-    plt.savefig("cross_validation_deg")
-    plt.show()
-
-
-
-
-
-
-############# LEAST SQUARES ##################
+###################### LEAST SQUARES ######################
 
 
 def cross_validation_ls(y, x, k_indices, k, degree):
@@ -107,10 +82,7 @@ def cross_validation_ls(y, x, k_indices, k, degree):
     tx_te = build_poly(x_te, degree)
 
     w, loss = least_squares(y_tr, tx_tr)
-
-
     y_pred = predict_labels(w, tx_te)
-
     acc = float(np.sum(y_te == y_pred))/len(y_te)
 
     return acc
@@ -119,45 +91,29 @@ def cross_validation_ls(y, x, k_indices, k, degree):
 def leastsquares_degree(y, x):
     seed = 1
     k_fold = 10
-    degrees = range(7,12+1)
+    degrees = range(1,14+1)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     # define lists to store the loss of training data and test data
     
     accs = []
+    stds = []
 
     for degree in degrees:
-        acc_temp= []
-        
+        acc_temp= []       
         for k in range(k_fold):
             acc = cross_validation_ls(y, x, k_indices, k, degree)
             acc_temp.append(acc)
-
         accs.append(np.mean(acc_temp))
-        
+        stds.append(np.std(acc_temp))
         print(degree, ': Acc = ', np.mean(acc_temp), ', std = ', np.std(acc_temp))
+        
 
-
-    ls_degree_visualization(degs, lambda_, accs, stds)
+    ls_degree_visualization(degrees, accs, stds)
     
 
-def ls_degree_visualization(degs, lambda_, accs, stds):
-
-    plt.errorbar(degs, accs, yerr=stds, marker=".", color='b', label='lambda = 0.0001')
-
-    plt.xlabel("degree")
-    plt.ylabel("accuracy")
-    plt.title("Ridge regression cross validation")
-    plt.legend(loc=2)
-    plt.grid(True)
-    plt.savefig("cross_validation_deg")
-    plt.show()
-
-
-
-
-############## RIDGE REGRESSION #################
+####################### RIDGE REGRESSION #########################
 
 
 def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
@@ -173,17 +129,12 @@ def cross_validation_rr(y, x, k_indices, k, lambda_, degree):
 
     tx_tr = build_poly(x_tr, degree)
     tx_te = build_poly(x_te, degree)
-
-    
+   
     w, loss = ridge_regression(y_tr, tx_tr, lambda_)
-
-
     loss_tr=np.sqrt(2*compute_mse(y_tr, tx_tr, w))
     loss_te=np.sqrt(2*compute_mse(y_te, tx_te, w))
 
-
     y_pred = predict_labels(w, tx_te)
-
     acc = float(np.sum(y_te == y_pred))/len(y_te)
 
     return loss_tr, loss_te, acc
@@ -226,8 +177,8 @@ def ridgeregression_lambda(y, x):
 def ridgeregression_degree_lambda(y,x):
     seed = 1
     k_fold = 4
-    lambdas = [0.000005,0.00001,0.00005,0.0001,0.0005,0.001]#[0.0001]#np.logspace(-6,-3, 4)
-    degrees = range(10,14+1)
+    lambdas = [0.000005,0.00001,0.00005,0.0001,0.0005,0.001, 0.005, 0.01]#[0.0001]#np.logspace(-6,-3, 4)
+    degrees = range(4,13)
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -236,26 +187,21 @@ def ridgeregression_degree_lambda(y,x):
     stds = []
     
     for d_ind, lambda_ in enumerate(lambdas):
-
         # define lists to store the loss of training data and test data
         rmse_tr = []
         rmse_te = []
         acc = []
         std = []
-
         # cross validation
         for ind, degree in enumerate(degrees):
             loss_tr = []
             loss_te = []
-            acc_1 = []
-            
+            acc_1 = []    
             for k in range (k_fold):
                 temp_loss_tr, temp_loss_te, temp_acc = cross_validation_rr(y, x, k_indices, k, lambda_, degree)
                 loss_tr.append(np.sqrt(2*temp_loss_tr))
                 loss_te.append(np.sqrt(2*temp_loss_te))
-                acc_1.append(temp_acc)
-
-            
+                acc_1.append(temp_acc)      
             rmse_tr.append(np.mean(loss_tr))
             rmse_te.append(np.mean(loss_te))
             acc.append(np.mean(acc_1))
@@ -274,6 +220,261 @@ def ridgeregression_degree_lambda(y,x):
     #rr_degree_visualization(degrees, 0.0001, accvectors, stds)    
 
 
+
+
+############################ LOGISTIC REGRESSION #################################
+
+def cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    y_te = np.expand_dims(y_te, axis=1)
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+    
+    y_tr=y[tr_indices].flatten()
+    y_tr = np.expand_dims(y_tr, axis=1)
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+    #y_tr,tx_tr = build_model_data(x_tr, y_tr)
+    #y_te,tx_te = build_model_data(x_te, y_te)
+    tx_tr = build_poly(x_tr,degree)
+    tx_te = build_poly(x_te,degree)
+
+    initial_w = np.zeros((tx_tr.shape[1], 1))
+
+    w, loss = logistic_regression(y_tr, tx_tr, initial_w, max_iters, gamma)
+    y_pred = predict_labels(w, tx_te)
+    acc = float(np.sum(y_te == y_pred))/len(y_te)
+
+    return acc
+
+def logregression_gamma(y, x):
+    print('start')
+    seed = 1
+    max_iters = 10
+    degree = 1
+
+    k_fold = 4
+    gammas = [0.0001, 0.001, 0.0015, 0.002, 0.005,0.01,0.05,0.1]
+    #gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
+
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    accs = []
+    for gamma in gammas:
+        acc_temp = []
+        for k in range(k_fold):
+            acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree)
+            acc_temp.append(acc)
+        accs.append(np.mean(acc_temp))
+        print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+    print(accs)
+    cross_validation_visualization_lr(gammas, accs)
+
+def logregression_gamma_degree(y, x):
+    print('start')
+    seed = 1
+    max_iters = 10
+    #degree = 1
+    degrees = range(1,14+1)
+    k_fold = 4
+    gammas = [0.00001,0.00005,0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
+
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    accs = []
+    for d_ind,gamma in enumerate(gammas):
+        acc_temp = []
+        for ind, degree in enumerate(degrees):
+            acc_1 = []
+            for k in range(k_fold):
+                acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree)
+                acc_1.append(acc)
+            acc_temp.append(np.mean(acc_1))
+            print(gamma, degree, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+        if d_ind == 0:
+            accs = acc_temp
+        else:
+            accs = np.vstack((accs, acc_temp))
+    print(accs)
+    cross_validation_visualization_lr(gammas, accs)
+
+def logregression_gamma_hessian(y, x):
+    print('start')
+    seed = 1
+    max_iters = 20
+    degree = 1
+    k_fold = 4
+    gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002]#, 0.01,0.05]
+
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+
+    accs = []
+    for gamma in gammas:
+        acc_temp = []
+
+        for k in range(k_fold):
+            acc = cross_validation_lrh(y, x, k_indices, k, max_iters, gamma)
+            acc_temp.append(acc)
+        accs.append(np.mean(acc_temp))
+        print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+    print(accs)
+    cross_validation_visualization_lr(gammas, accs)
+
+
+def cross_validation_lrh(y, x, k_indices, k, max_iters, gamma):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    y_te = np.expand_dims(y_te, axis=1)
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+    
+    y_tr=y[tr_indices].flatten()
+    y_tr = np.expand_dims(y_tr, axis=1)
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+
+
+    #y_tr,tx_tr = build_model_data(x_tr, y_tr)
+    #y_te,tx_te = build_model_data(x_te, y_te)
+    tx_tr = build_poly(x_tr,1)
+    tx_te = build_poly(x_te,1)
+
+    initial_w = np.zeros((tx_tr.shape[1], 1))
+    w, loss = logistic_regression_hessian(y_tr, tx_tr, initial_w, max_iters, gamma)
+
+    y_pred = predict_labels(w, tx_te)
+    acc = float(np.sum(y_te == y_pred))/len(y_te)
+
+    return acc
+
+
+
+
+################### REGURALIZED LOGISTIC REGRESSION ############################
+
+def cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    y_te = np.expand_dims(y_te, axis=1)
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+
+    y_tr=y[tr_indices].flatten()
+    y_tr = np.expand_dims(y_tr, axis=1)
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+
+    y_tr,tx_tr = build_model_data(x_tr, y_tr)
+    y_te,tx_te = build_model_data(x_te, y_te)
+
+    initial_w = np.zeros((tx_tr.shape[1], 1))
+
+    w, loss = reg_logistic_regression(y_tr, tx_tr, lambda_, initial_w, max_iters, gamma)
+    y_pred = predict_labels(w, tx_te)
+    acc = float(np.sum(y_te == y_pred))/len(y_te)
+
+    return acc
+
+
+def reglogregression_gamma(y, x):
+    seed = 1
+    max_iters = 50
+
+    k_fold = 2
+    gammas = 0.004#[0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002,0.003, 0.004, 0.005] #np.logspace(-3, 0, 3)
+    lambdas = 0.001#[0.0001, 0.0005, 0.0009, 0.001, 0.0015 ]#np.logspace(-4, 0, 5)
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    accs = np.zeros((len(gammas),len(lambdas)))
+    for i, gamma in enumerate(gammas):
+        for j, lambda_ in enumerate(lambdas):
+            acc_temp= []
+            for k in range(k_fold):
+                acc = cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma)
+                acc_temp.append(acc)
+            accs[i][j] = np.mean(acc_temp)
+
+        print("gamma: ", gamma,"lambda: ", lambda_ ,' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
+
+    #cross_validation_visualization_rlr(gammas, lambdas, accs)
+
+############################ STACKING #################################
+
+def cross_validation_stacking(y, x, k_indices, k, degree):
+    """return the loss of ridge regression."""
+
+    y_te=y[k_indices[k,:]]
+    y_te = np.expand_dims(y_te, axis=1)
+    x_te=x[k_indices[k,:]]
+
+    tr_indices=np.delete(k_indices, (k), axis=0)
+    
+    y_tr=y[tr_indices].flatten()
+    y_tr = np.expand_dims(y_tr, axis=1)
+    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
+
+    y_pred = stacking(y_tr.T,x_tr,y_te.T,x_te)
+
+    acc = float(np.sum(y_te.T == y_pred))/len(y_te)
+    print(acc)
+    return acc
+
+def stacking_cross(y, x):
+    seed = 1
+    degree = 10
+    k_fold = 4
+    # split data in k fold
+    k_indices = build_k_indices(y, k_fold, seed)
+    # define lists to store the loss of training data and test data
+    accs = []
+    stds = []
+    for k in range(k_fold):
+        acc = cross_validation_stacking(y, x, k_indices, k, degree)
+        accs.append(acc)
+        print("acc", acc)
+    acc_final = np.mean(accs)
+    stds_final = np.std(accs)
+
+    print(degree, ', ',  ': acc = ', acc_final, ', std = ', stds_final)
+
+############################ PLOTS ##############################
+
+################# GRADIENT DESCENT PLOTS ########################
+def gradientdescent_gamma_visualization(gammas, accs, stds):
+    plt.errorbar(gammas, accs, yerr=stds, marker=".", color='b', label='Accuracy')
+    plt.xscale('log')
+    plt.xlabel("degree")
+    plt.ylabel("accuracy")
+    plt.title("Gradient descent cross validation")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("cross_validation_deg")
+    plt.show()
+
+################# LEAST SQUARE PLOTS ########################
+def ls_degree_visualization(degs, accs, stds):
+
+    plt.errorbar(degs, accs, yerr=stds, marker=".", color='b', label='lambda = 0.0001')
+
+    plt.xlabel("degree")
+    plt.ylabel("accuracy")
+    plt.title("Ridge regression cross validation")
+    plt.legend(loc=2)
+    plt.grid(True)
+    plt.savefig("cross_validation_deg")
+    plt.show()
+
+
+
+################# RIDGE REGRESSION PLOTS ########################
 def rr_degree_lambda_visualization(degs, lambdas, accs, stds):
     for i in range(len(lambdas)):
         label = 'lambda =' + str(lambdas[i])
@@ -313,232 +514,6 @@ def rr_lambda_visualization(degree, lambdas, accs, stds):
     plt.savefig("cross_validation_deg")
     plt.show()
 
-
-
-
-
-
-############################ LOGISTIC REGRESSION #################################
-
-def cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree):
-    """return the loss of ridge regression."""
-
-    y_te=y[k_indices[k,:]]
-    y_te = np.expand_dims(y_te, axis=1)
-    x_te=x[k_indices[k,:]]
-
-    tr_indices=np.delete(k_indices, (k), axis=0)
-    
-    y_tr=y[tr_indices].flatten()
-    y_tr = np.expand_dims(y_tr, axis=1)
-    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
-
-
-    #y_tr,tx_tr = build_model_data(x_tr, y_tr)
-    #y_te,tx_te = build_model_data(x_te, y_te)
-    tx_tr = build_poly(x_tr,degree)
-    tx_te = build_poly(x_te,degree)
-
-    initial_w = np.zeros((tx_tr.shape[1], 1))
-
-    w, loss = logistic_regression3(y_tr, tx_tr, initial_w, max_iters, gamma)
-
-    # loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
-    # loss_tr = np.sqrt(2*compute_mse(y_tr, tx_tr, w))
-
-    y_pred = predict_labels(w, tx_te)
-
-    acc = float(np.sum(y_te == y_pred))/len(y_te)
-
-    return acc
-
-
-def logregression_gamma_hessian(y, x):
-    print('start')
-    seed = 1
-    max_iters = 5
-    degree = 1
-
-    k_fold = 2
-    gammas = [0.0001, 0.0005]#, 0.0009, 0.001, 0.0015, 0.002]
-
-    # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    accs = []
-
-    for gamma in gammas:
-        acc_temp = []
-
-        for k in range(k_fold):
-            acc = cross_validation_lrh(y, x, k_indices, k, max_iters, gamma, degree)
-            acc_temp.append(acc)
-        accs.append(np.mean(acc_temp))
-
-        print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
-    print(accs)
-    cross_validation_visualization_lr(gammas, accs)
-
-
-def cross_validation_lrh(y, x, k_indices, k, max_iters, gamma, degree):
-    """return the loss of ridge regression."""
-
-    y_te=y[k_indices[k,:]]
-    y_te = np.expand_dims(y_te, axis=1)
-    x_te=x[k_indices[k,:]]
-
-    tr_indices=np.delete(k_indices, (k), axis=0)
-    
-    y_tr=y[tr_indices].flatten()
-    y_tr = np.expand_dims(y_tr, axis=1)
-    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
-
-
-    #y_tr,tx_tr = build_model_data(x_tr, y_tr)
-    #y_te,tx_te = build_model_data(x_te, y_te)
-    tx_tr = build_poly(x_tr,degree)
-    tx_te = build_poly(x_te,degree)
-
-    initial_w = np.zeros((tx_tr.shape[1], 1))
-
-    w, loss = logistic_regression_hessian(y_tr, tx_tr, initial_w, max_iters, gamma)
-
-    # loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
-    # loss_tr = np.sqrt(2*compute_mse(y_tr, tx_tr, w))
-
-    y_pred = predict_labels(w, tx_te)
-
-    acc = float(np.sum(y_te == y_pred))/len(y_te)
-
-    return acc
-
-
-def logregression_gamma(y, x):
-    print('start')
-    seed = 1
-    max_iters = 10
-    degree = 1
-
-    k_fold = 4
-    gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
-
-    # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    accs = []
-
-    for gamma in gammas:
-        acc_temp = []
-
-        for k in range(k_fold):
-            acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree)
-            acc_temp.append(acc)
-        accs.append(np.mean(acc_temp))
-
-        print(gamma, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
-    print(accs)
-    cross_validation_visualization_lr(gammas, accs)
-
-def logregression_gamma_degree(y, x):
-    print('start')
-    seed = 1
-    max_iters = 10
-    #degree = 1
-    degrees = range(1,14+1)
-    k_fold = 4
-    gammas = [0.00001,0.00005,0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
-
-    # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    accs = []
-
-    for d_ind,gamma in enumerate(gammas):
-        acc_temp = []
-        for ind, degree in enumerate(degrees):
-            acc_1 = []
-            for k in range(k_fold):
-                acc = cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree)
-                acc_1.append(acc)
-            acc_temp.append(np.mean(acc_1))
-
-            print(gamma, degree, ' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
-        if d_ind == 0:
-            accs = acc_temp
-        else:
-            accs = np.vstack((accs, acc_temp))
-    print(accs)
-    cross_validation_visualization_lr(gammas, accs)
-
-
-
-
-def cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma):
-    """return the loss of ridge regression."""
-
-    y_te=y[k_indices[k,:]]
-    y_te = np.expand_dims(y_te, axis=1)
-    x_te=x[k_indices[k,:]]
-
-    tr_indices=np.delete(k_indices, (k), axis=0)
-
-    y_tr=y[tr_indices].flatten()
-    y_tr = np.expand_dims(y_tr, axis=1)
-    x_tr = x[tr_indices].reshape(x.shape[0]-x_te.shape[0],x.shape[1])
-
-    y_tr,tx_tr = build_model_data(x_tr, y_tr)
-    y_te,tx_te = build_model_data(x_te, y_te)
-
-    initial_w = np.zeros((tx_tr.shape[1], 1))
-
-    w, loss = reg_logistic_regression(y_tr, tx_tr, lambda_, initial_w, max_iters, gamma)
-
-
-    # loss_te = np.sqrt(2*compute_mse(y_te, tx_te, w))
-    # loss_tr = np.sqrt(2*compute_mse(y_tr, tx_tr, w))
-
-    y_pred = predict_labels(w, tx_te)
-
-    acc = float(np.sum(y_te == y_pred))/len(y_te)
-
-    return acc
-
-
-def reglogregression_gamma(y, x):
-    seed = 1
-    max_iters = 50
-
-    k_fold = 2
-    gammas = 0.004#[0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002,0.003, 0.004, 0.005] #np.logspace(-3, 0, 3)
-    lambdas = 0.001#[0.0001, 0.0005, 0.0009, 0.001, 0.0015 ]#np.logspace(-4, 0, 5)
-    # split data in k fold
-    k_indices = build_k_indices(y, k_fold, seed)
-    # define lists to store the loss of training data and test data
-
-    #accs = []
-    accs = np.zeros((len(gammas),len(lambdas)))
-
-    for i, gamma in enumerate(gammas):
-        #acc_temp_gamma = []
-        for j, lambda_ in enumerate(lambdas):
-            acc_temp= []
-
-            for k in range(k_fold):
-                acc = cross_validation_rlr(y, x, lambda_, k_indices, k, max_iters, gamma)
-                acc_temp.append(acc)
-            accs[i][j] = np.mean(acc_temp)
-
-        print("gamma: ", gamma,"lambda: ", lambda_ ,' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
-
-    #cross_validation_visualization_rlr(gammas, lambdas, accs)
-
-
-############# PLOTS ##################
-
-
 def cross_validation_visualization(lambds, mse_tr, mse_te):
     """visualization the curves of mse_tr and mse_te."""
     plt.semilogx(lambds, mse_tr, marker=".", color='b', label='train error')
@@ -551,6 +526,7 @@ def cross_validation_visualization(lambds, mse_tr, mse_te):
     plt.savefig("cross_validation")
     plt.show()
 
+################# LOGISTIC REGRESSION PLOTS ########################
 def cross_validation_visualization_lr(gammas, acc):
     """visualization the curves of mse_tr and mse_te."""
     plt.semilogx(gammas, acc, marker=".", color='b', label='train error')
@@ -561,6 +537,7 @@ def cross_validation_visualization_lr(gammas, acc):
     plt.savefig("cross_validation")
     plt.show()
 
+############ REGULARIZED LOGISTIC REGRESSION PLOTS ##################
 def cross_validation_visualization_rlr(gammas, lambdas, accs):
 #def plot_accs_degs(degs, lambdas, accs):
     
@@ -588,14 +565,4 @@ def cross_validation_visualization_degree(degs, mse_tr, mse_te):
     plt.savefig("cross_validation_deg")
     plt.show()
 
-
-# def plot_acc_degs(degs, acc):
-#     plt.plot(degs, acc, marker=".", color='b', label='Accuracy')
-#     plt.xlabel("degree")
-#     plt.ylabel("accuracy")
-#     plt.title("cross validation degree accuracy")
-#     plt.legend(loc=2)
-#     plt.grid(True)
-#     plt.savefig("cross_validation_deg")
-#     plt.show()
 

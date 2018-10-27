@@ -26,10 +26,11 @@ def main():
 	input_data_train, input_data_test = remove999(input_data_train, yb_train, ids_train, input_data_test, ids_test)
 
 	# Remove selected features
-	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,16,19,21,23,25,26,27,28,29])
+	input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,13,14,15,17,18,24,25,26,27,28,29])
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [5,6,7,9,13,23,25,26,27,28,29])
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [16,19,21])
 	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [14,24,25,27])
+	#input_data_train, input_data_test = removecols(input_data_train, input_data_test, [14,15,17,18,24,25,27,28])
 
 	# Turn positive columns into logarithm
 	input_data_train, input_data_test = logpositive(input_data_train, input_data_test)
@@ -38,8 +39,8 @@ def main():
 	x_train = standardize(input_data_train)
 	x_test = standardize(input_data_test)
 
-	#x_train = standardize_with_bootstrapping(input_data_train, 1000)
-	#x_test = standardize_with_bootstrapping(input_data_test, 1000)
+	#x_train = standardize_with_bootstrapping(input_data_train, 500)
+	#x_test = standardize_with_bootstrapping(input_data_test, 500)
 	
 	# Build model test data
 	#y_test, tx_test = build_model_data(x_test,yb_test)
@@ -58,11 +59,11 @@ def main():
 	#print(ls_w.shape)
 	#tx_test = build_poly(x_test,degree)
 
-	#lr_w, lr_loss = run_logistic_regression3(yb_train, x_train)
+	#lr_w, lr_loss = run_logistic_regression(yb_train, x_train)
 	#print(lr_w, lr_loss)
 
-	#lr_w, lr_loss = run_logistic_regression_hessian(yb_train, x_train)
-	#print(lr_w, lr_loss)
+	lr_w, lr_loss = run_logistic_regression_hessian(yb_train, x_train)
+	print(lr_w, lr_loss)
 
 	#rlr_w, rlr_loss = run_reg_logistic_regression(yb_train, x_train)
 	#print("w", rlr_w, "\n\n", "loss",rlr_loss)
@@ -90,23 +91,26 @@ def main():
 	#logregression_gamma_degree(yb_train, x_train)
 
 	#reglogregression_gamma(yb_train, x_train)
-
-	#yt = yb_train[:len(yb_train)//2]
-	#xt = x_train[:len(yb_train)//2,:]
-	#yte = yb_train[len(yb_train)//2+1::]
-	#xte = x_train[len(yb_train)//2+1::,:]
+	'''
+	yt = yb_train[:len(yb_train)//2]
+	xt = x_train[:len(yb_train)//2,:]
+	yb_test = yb_train[len(yb_train)//2+1::]
+	xte = x_train[len(yb_train)//2+1::,:]
+	y_pred = stacking(yt,xt,yb_test,xte)
+	acc = float(np.sum(yb_test == y_pred))/len(yb_test)
+	print(yb_test)
+	print("accuracy = ", acc)'''
+	#stacking_cross(yb_train, x_train)
 	#print(yt.shape, xt.shape, yte.shape,xte.shape)
-	y_pred = stacking(yb_train,x_train,yb_test,x_test)
-	#pred = stacking(yt,xt,yte,xte)
-	#print(pred)
-	#acc = float(np.sum(yte == pred))/len(yte)
-	#print("accuracy = ", acc)
+	
+	#y_pred = stacking(yb_train,x_train,yb_test,x_test)
+	
 
 
 	#Make predictions
 	
 	#y_pred = predict_labels(rr_w, tx_test)
-	create_csv_submission(ids_test, y_pred, 'stacking') #lager prediction-fila i Rolex-mappa med det navnet
+	#create_csv_submission(ids_test, y_pred, 'stacking_bootstrap_g01_d10_l0005') #lager prediction-fila i Rolex-mappa med det navnet
 
 	return 0;
 

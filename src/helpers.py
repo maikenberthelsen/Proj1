@@ -90,10 +90,11 @@ def sigmoid(t):
 ###############KOK###########################
 def calculate_hessian(y, tx, w, pred):
     """return the hessian of the loss function."""
-    #pred = sigmoid(tx.dot(w))
+    #pred = sigmoid(tx.dot(w))*(1-)
     pred = np.diag(pred.T[0])
-    r = np.multiply(pred, (1-pred))
-    return tx.T.dot(r).dot(tx)
+    S = np.multiply(pred, (1-pred))
+    XdotS = tx.T.dot(S)
+    return XdotS.dot(tx)
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
