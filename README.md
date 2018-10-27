@@ -1,5 +1,5 @@
 # CS-433 Machine Learning - Project 1
-Project of CS-433 - Machine Learning, EPFL (Fall 2018).
+Project in CS-433 - Machine Learning, EPFL (Fall 2018).
 
 Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
 
@@ -30,7 +30,7 @@ This code contains the following files:
 
 * implementations.py
 
-	Contains all of our implementations and is divided into three parts, such as
+	Contains all of our implementations and is divided into three parts, each containing:
 
 		- The six ML methods that are asked for in the project description.
 
