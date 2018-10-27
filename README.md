@@ -6,23 +6,23 @@ Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
 
 
 
-### Running instructions
-Make sure that the folder containing the .csv files are in the same folder as main.py.
+### Running instructions:
+- Download the .zip-file containing the data set from https://www.kaggle.com/c/epfml18-higgs/data. Make sure that the folder containing these files are in the same folder as run.py
 
-The code can be run by calling "python main.py" from your terminal.
+- The code can be run by calling "python main.py" from your terminal
 
-Her bør vi legge til noe som printes til terminal når det er ferdig
+- Her bør vi legge til noe som printes til terminal når det er ferdig
 
-The submission csv file can be found in the same folder.
-
-
+- The submission csv file can be found in the same folder with the name "Results.csv"
 
 
-### Code architecture
+
+
+### Code architecture:
 This code contains the following files:
-* main.py 
+* run.py 
 
-	The whole code can be executed by running main.py. This file imports helpers.py and implementations.py
+	The whole code can be executed by running run.py. This file imports helpers.py and implementations.py
 
 * helpers.py
 
