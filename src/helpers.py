@@ -221,4 +221,14 @@ def standardize_with_bootstrapping(x,num_subSamp):
 
     return x
 
+def findcorrelation(pred_train, sig_or_back):
+    print("pred_train")
+    print(pred_train.shape)
+    print("sig_or_back")
+    print(sig_or_back.shape)
+    col = []
+    for i in range(1,pred_train.shape[1]):
+        if abs(np.cov(pred_train[:,i], sig_or_back)[0,1]) < 0.005:
+            col.append(i)
 
+    return col
