@@ -7,9 +7,9 @@ Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
 The whole code can executed by running main.py
 
 ## Code architecture
-*main.py 
+* main.py 
 
-*helpers.py
+* helpers.py
 Contains the given functions for loading csv, pridicting labels and create a csv submission.
 
 
