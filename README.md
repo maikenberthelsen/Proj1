@@ -5,10 +5,6 @@ Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
 
 
 
-### How to run the code?
-The whole code can executed by running main.py
-
-
 
 ### Code architecture
 This code contains the following files:
