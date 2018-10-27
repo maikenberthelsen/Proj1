@@ -6,6 +6,18 @@ Group: Maiken Berthelsen, Ida Sandsbraaten and Sigrid Wanvik Haugen.
 
 
 
+### Running instructions
+Make sure that the folder containing the .csv files are in the same folder as main.py.
+
+The code can be run by calling "python main.py" from your terminal.
+
+Her bør vi legge til noe som printes til terminal når det er ferdig
+
+The submission csv file can be found in the same folder.
+
+
+
+
 ### Code architecture
 This code contains the following files:
 * main.py 
