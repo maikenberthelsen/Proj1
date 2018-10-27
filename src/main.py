@@ -97,6 +97,7 @@ def main():
 	#xte = x_train[len(yb_train)//2+1::,:]
 	#print(yt.shape, xt.shape, yte.shape,xte.shape)
 	y_pred = stacking(yb_train,x_train,yb_test,x_test)
+	#pred = stacking(yt,xt,yte,xte)
 	#print(pred)
 	#acc = float(np.sum(yte == pred))/len(yte)
 	#print("accuracy = ", acc)
