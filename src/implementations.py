@@ -87,7 +87,33 @@ def ridge_regression(y, tx, lambda_):
 
 	return w, loss
 
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
 
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    loss = 0
+    #threshold = 1e-8
+    for n_iter in range(max_iters):
+        loss = sum(sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))))
+        prediction = sigmoid(tx.dot(w))
+        gradient = tx.T.dot(prediction - y)
+
+        # gradient w by descent update
+        w = w - (gamma * gradient)
+        ws.append(w)
+        losses.append(loss)
+
+        #if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
+        #   break
+
+    #finds best parameters
+    min_ind = np.argmin(losses)
+    loss = losses[min_ind]
+    w = ws[min_ind][:]
+    
+    return w, loss
+    
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 	ws = [initial_w]
 	losses = []
@@ -134,6 +160,7 @@ def logistic_regression_hessian(y, tx, initial_w, max_iters, gamma):
         # gradient w by descent update
         hessian_inv = inverse = np.linalg.inv(hessian)
         w = w - (hessian_inv*gradient*gamma)#np.linalg.solve(hessian, gradient)
+        print(w)
         ws.append(w)
         losses.append(loss)
 
@@ -179,36 +206,4 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     w -= gamma * grad
     return loss, w
 
-
-
-
-
-
-# tentative suggestions for logistic regression
-def logistic_regression(y, tx, initial_w, max_iters, gamma):
-
-    ws = [initial_w]
-    losses = []
-    w = initial_w
-    loss = 0
-    #threshold = 1e-8
-    for n_iter in range(max_iters):
-        loss = sum(sum(np.logaddexp(0, tx.dot(w)) - y*(tx.dot(w))))
-        prediction = sigmoid(tx.dot(w))
-        gradient = tx.T.dot(prediction - y)
-
-        # gradient w by descent update
-        w = w - (gamma * gradient)
-        ws.append(w)
-        losses.append(loss)
-
-        #if (len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold):
-        #   break
-
-    #finds best parameters
-    min_ind = np.argmin(losses)
-    loss = losses[min_ind]
-    w = ws[min_ind][:]
-    
-    return w, loss
 

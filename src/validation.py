@@ -252,11 +252,11 @@ def cross_validation_lr(y, x, k_indices, k, max_iters, gamma, degree):
 def logregression_gamma(y, x):
     print('start')
     seed = 1
-    max_iters = 10
+    max_iters = 100
     degree = 1
 
     k_fold = 4
-    gammas = [0.0001, 0.001, 0.0015, 0.002, 0.005,0.01,0.05,0.1]
+    gammas = [0.0001,0.0005, 0.001, 0.0015, 0.005]#,0.01,0.05,0.1]
     #gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
 
     # split data in k fold
@@ -278,9 +278,9 @@ def logregression_gamma_degree(y, x):
     seed = 1
     max_iters = 10
     #degree = 1
-    degrees = range(1,14+1)
+    degrees = range(1,6)
     k_fold = 4
-    gammas = [0.00001,0.00005,0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002, 0.0022, 0.0025, 0.003]
+    gammas = [0.00001,0.00005,0.0001, 0.0005, 0.001, 0.002, 0.003,0.006,0.01]
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -305,10 +305,11 @@ def logregression_gamma_degree(y, x):
 def logregression_gamma_hessian(y, x):
     print('start')
     seed = 1
-    max_iters = 20
+    max_iters = 50
     degree = 1
     k_fold = 4
-    gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002]#, 0.01,0.05]
+    gammas = [0.01,0.05, 0.1]
+    #gammas = [0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002]#, 0.01,0.05]
 
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -388,9 +389,9 @@ def reglogregression_gamma(y, x):
     seed = 1
     max_iters = 50
 
-    k_fold = 2
-    gammas = 0.004#[0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002,0.003, 0.004, 0.005] #np.logspace(-3, 0, 3)
-    lambdas = 0.001#[0.0001, 0.0005, 0.0009, 0.001, 0.0015 ]#np.logspace(-4, 0, 5)
+    k_fold = 4
+    gammas = [0.001,0.01,0.1]#[0.0001, 0.0005, 0.0009, 0.001, 0.0015, 0.002,0.003, 0.004, 0.005] #np.logspace(-3, 0, 3)
+    lambdas = [0.001, 0.001]#[0.0001, 0.0005, 0.0009, 0.001, 0.0015 ]#np.logspace(-4, 0, 5)
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
     accs = np.zeros((len(gammas),len(lambdas)))
@@ -404,11 +405,11 @@ def reglogregression_gamma(y, x):
 
         print("gamma: ", gamma,"lambda: ", lambda_ ,' accuracy = ', np.mean(acc_temp), 'std = ', np.std(acc_temp))
 
-    #cross_validation_visualization_rlr(gammas, lambdas, accs)
+    cross_validation_visualization_rlr(gammas, lambdas, accs)
 
 ############################ STACKING #################################
 
-def cross_validation_stacking(y, x, k_indices, k, degree):
+def cross_validation_stacking(y, x, k_indices, k):
     """return the loss of ridge regression."""
 
     y_te=y[k_indices[k,:]]
@@ -429,7 +430,7 @@ def cross_validation_stacking(y, x, k_indices, k, degree):
 
 def stacking_cross(y, x):
     seed = 1
-    degree = 10
+    #degree = 10
     k_fold = 4
     # split data in k fold
     k_indices = build_k_indices(y, k_fold, seed)
@@ -437,13 +438,13 @@ def stacking_cross(y, x):
     accs = []
     stds = []
     for k in range(k_fold):
-        acc = cross_validation_stacking(y, x, k_indices, k, degree)
+        acc = cross_validation_stacking(y, x, k_indices, k)
         accs.append(acc)
         print("acc", acc)
     acc_final = np.mean(accs)
     stds_final = np.std(accs)
 
-    print(degree, ', ',  ': acc = ', acc_final, ', std = ', stds_final)
+    print(' acc = ', acc_final, ', std = ', stds_final)
 
 ############################ PLOTS ##############################
 
