@@ -1,31 +1,90 @@
-# COM402 Homework 1  
+# COM402 Homework 2  
 
-## Exercise 1 & 2
-Explanantions of exercise 1 and 2 can be found in the word document(due to the picture)
+## Exercise 1 
+To run:
+- python ex1.py
+In another terminal I wrote this in order to debug my program:
+- curl -d '{"user":"maiken.berthelsen@epfl.ch", "pass":"IwQfDhdOXQcLFlQJRQQGCA8uRQQJTEoMSA=="}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/hw2/ex1
+
+## Exercise 2
+May need to install websockets
+- pip install websockets
+To run:
+- python ex2.py
+The token will then be printed.
+
+## Exercise 3 
+To run:
+- python ex2.py
+In a new terminal I wrote this to debug:
+- curl -d '{"user":"maiken.berthelsen@epfl.ch", "pass":"IwQfDhdOXQcLFlQJRQQGCA8uRQQJTEoMSA=="}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/ex3/login
+
+**When uploading to the verification site I sometimes received and error and sometimes a token with the same script. So if an error occurs please try to upload it several times as it clearly works given that I got the token and I did not find out why it sometimes outputted an error.**
 
 
-## Exercise 3 & 4 
-Go to the folder where you have interceptor.py, interceptor2.py and run_dockers.sh. 
-Start Docker.
 
-## Exercise 3
-In this exercise I use interceptor.py
+## Exercise 4a
+Typed the following commands:
+- docker start -i hw2_ex4
+- nginx
+Create key and certificate, have already created the folder /etc/nginx/ssl
+- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/localhost.key -out /etc/nginx/ssl/localhost.crt
 
-I start by typing: sh run_dockers.sh maiken.berthelsen@epfl.ch
-Next command: docker exec -it attacker python3 shared/interceptor.py
+Example fill in, common name should be localhost: 
+Country Name (2 letter code) [AU]:NO
+State or Province Name (full name) [Some-State]:server
+Locality Name (eg, city) []:Oslo
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
+Organizational Unit Name (eg, section) []:s
+Common Name (e.g. server FQDN or YOUR name) []:localhost
+Email Address []:maiken.berthelsen@epfl.ch
 
-You will maybe have to wait a while, but will eventuelly receive 
+Change the location in the default.conf file to 
+	ssl_certificate /etc/nginx/ssl/localhost.crt;
+    ssl_certificate_key /etc/nginx/ssl/localhost.key;
+In order to check that the config-file is ok type
+- sudo nginx -t
+To reload nginx 
+- sudo nginx -s reload
 
-{"product": "Lq3Sos+rCh6M1+nj6lQoxrrVn/zLAZGAZFy6Pg62+Nk=", "shipping_address": "lausanne"}
-TBt1t2Q5RvOt96EwDTIZA33e7tmG+e1BzBQitwW3GmY=
-The last string is the token for exercise 3.
+I exited the program and then started it again, and wrote nginx, then ./verify.sh a
 
+(The index.htms filed has also been changed by using vim)
 
-## Exercise 4
-Type docker exec -it attacker python3 shared/interceptor2.py
-All the secrets are printed once they are found, and in the end this is printed:
+## Exercise 4b
+Typed the following commands:
+- docker start -i hw2_ex4
+- nginx
+Inside the /etc/nginx/ssl folder
+Creating the servers private key, need to fill in a password
+- openssl genrsa -des3 -out server.key 1024
+Create the certificate signing request, need to fill in the same password
+- openssl req -new -key server.key -out server.csr
+Example of what I filled in, can be filled in with whatever as long as common name is localhost
 
-{'secrets': ['1458.9681.0437.2905', '>D3?R>?LGE>2JH', '8946/1123/3234/2400', '6358/6583/0361/2674', 'XQNEV5E3L<>Q8'], 'student_email': 'maiken.berthelsen@epfl.ch'}
-Y9sPsTQS789+LoTf8u/wWJhTAqwFCz/lR9PJUX84paw=
-The last string is the token for exercise 4.
+Country Name (2 letter code) [AU]:NO
+State or Province Name (full name) [Some-State]:server
+Locality Name (eg, city) []:Oslo
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
+Organizational Unit Name (eg, section) []:s
+Common Name (e.g. server FQDN or YOUR name) []:localhost
+Email Address []:maiken.berthelsen@epfl.ch
+
+Removing the need to fill in the password for starting up NGINX with SSL
+- cp server.key server.key.org
+- openssl rsa -in server.key.org -out server.key
+
+Copy server.csr to the COM402's CA, and receive the certificate.
+Copy the certificate into a file called server.crt.
+In default.conf change the name where you can find the ssl_certificate and ssl_certificate_key to:
+	ssl_certificate /etc/nginx/ssl/localhost.crt;
+    ssl_certificate_key /etc/nginx/ssl/localhost.key;
+
+In order to check that the config-file is ok type
+- sudo nginx -t
+To reload nginx 
+- sudo nginx -s reload
+
+I exited the program and then started it again, and wrote nginx, then ./verify.sh b
+
 
