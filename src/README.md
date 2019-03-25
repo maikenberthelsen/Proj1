@@ -57,7 +57,7 @@ To reload nginx
 
 I exited the program and then started it again, and wrote nginx, then ./verify.sh a
 
-(The index.htms filed has also been changed by using vim)
+(The index.html filed has also been changed by using vim)
 
 ## Exercise 4b
 Typed the following commands:
