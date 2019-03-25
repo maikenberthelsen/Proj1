@@ -37,25 +37,17 @@ Create key and certificate, have already created the folder /etc/nginx/ssl
 
 Example fill in, common name should be localhost: 
 
-Country Name (2 letter code) [AU]:NO
-
-State or Province Name (full name) [Some-State]:server
-
-Locality Name (eg, city) []:Oslo
-
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
-
-Organizational Unit Name (eg, section) []:s
-
-Common Name (e.g. server FQDN or YOUR name) []:localhost
-
-Email Address []:maiken.berthelsen@epfl.ch
+- Country Name (2 letter code) [AU]:NO
+- State or Province Name (full name) [Some-State]:server
+- Locality Name (eg, city) []:Oslo
+- Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
+- Organizational Unit Name (eg, section) []:s
+- Common Name (e.g. server FQDN or YOUR name) []:localhost
+- Email Address []:maiken.berthelsen@epfl.ch
 
 Change the location in the default.conf file to 
-
-ssl_certificate /etc/nginx/ssl/localhost.crt;
-    
-ssl_certificate_key /etc/nginx/ssl/localhost.key;
+- ssl_certificate /etc/nginx/ssl/localhost.crt;
+- ssl_certificate_key /etc/nginx/ssl/localhost.key;
 
 In order to check that the config-file is ok type
 - sudo nginx -t
@@ -82,19 +74,13 @@ Create the certificate signing request, need to fill in the same password
 
 Example of what I filled in, can be filled in with whatever as long as common name is localhost
 
-Country Name (2 letter code) [AU]:NO
-
-State or Province Name (full name) [Some-State]:server
-
-Locality Name (eg, city) []:Oslo
-
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
-
-Organizational Unit Name (eg, section) []:s
-
-Common Name (e.g. server FQDN or YOUR name) []:localhost
-
-Email Address []:maiken.berthelsen@epfl.ch
+- Country Name (2 letter code) [AU]:NO
+- State or Province Name (full name) [Some-State]:server
+- Locality Name (eg, city) []:Oslo
+- Organization Name (eg, company) [Internet Widgits Pty Ltd]:SERVER
+- Organizational Unit Name (eg, section) []:s
+- Common Name (e.g. server FQDN or YOUR name) []:localhost
+- Email Address []:maiken.berthelsen@epfl.ch
 
 Removing the need to fill in the password for starting up NGINX with SSL
 - cp server.key server.key.org
@@ -105,10 +91,8 @@ Copy server.csr to the COM402's CA, and receive the certificate.
 Copy the certificate into a file called server.crt.
 
 In default.conf change the name where you can find the ssl_certificate and ssl_certificate_key to:
-
-ssl_certificate /etc/nginx/ssl/localhost.crt;
-
-ssl_certificate_key /etc/nginx/ssl/localhost.key;
+- ssl_certificate /etc/nginx/ssl/localhost.crt;
+- ssl_certificate_key /etc/nginx/ssl/localhost.key;
 
 In order to check that the config-file is ok type
 - sudo nginx -t
