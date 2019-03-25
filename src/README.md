@@ -3,19 +3,23 @@
 ## Exercise 1 
 To run:
 - python ex1.py
+
 In another terminal I wrote this in order to debug my program:
 - curl -d '{"user":"maiken.berthelsen@epfl.ch", "pass":"IwQfDhdOXQcLFlQJRQQGCA8uRQQJTEoMSA=="}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/hw2/ex1
 
 ## Exercise 2
 May need to install websockets
 - pip install websockets
+
 To run:
 - python ex2.py
+
 The token will then be printed.
 
 ## Exercise 3 
 To run:
 - python ex2.py
+
 In a new terminal I wrote this to debug:
 - curl -d '{"user":"maiken.berthelsen@epfl.ch", "pass":"IwQfDhdOXQcLFlQJRQQGCA8uRQQJTEoMSA=="}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/ex3/login
 
@@ -27,6 +31,7 @@ In a new terminal I wrote this to debug:
 Typed the following commands:
 - docker start -i hw2_ex4
 - nginx
+
 Create key and certificate, have already created the folder /etc/nginx/ssl
 - sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/localhost.key -out /etc/nginx/ssl/localhost.crt
 
@@ -44,6 +49,7 @@ Change the location in the default.conf file to
     ssl_certificate_key /etc/nginx/ssl/localhost.key;
 In order to check that the config-file is ok type
 - sudo nginx -t
+
 To reload nginx 
 - sudo nginx -s reload
 
@@ -55,11 +61,14 @@ I exited the program and then started it again, and wrote nginx, then ./verify.s
 Typed the following commands:
 - docker start -i hw2_ex4
 - nginx
+
 Inside the /etc/nginx/ssl folder
 Creating the servers private key, need to fill in a password
 - openssl genrsa -des3 -out server.key 1024
+
 Create the certificate signing request, need to fill in the same password
 - openssl req -new -key server.key -out server.csr
+
 Example of what I filled in, can be filled in with whatever as long as common name is localhost
 
 Country Name (2 letter code) [AU]:NO
@@ -82,9 +91,12 @@ In default.conf change the name where you can find the ssl_certificate and ssl_c
 
 In order to check that the config-file is ok type
 - sudo nginx -t
+
 To reload nginx 
 - sudo nginx -s reload
 
 I exited the program and then started it again, and wrote nginx, then ./verify.sh b
+
+
 
 
